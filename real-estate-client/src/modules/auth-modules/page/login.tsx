@@ -5,7 +5,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginValidation } from "../validation-schema/user.validation";
 import { EyeIcon, EyeOffIcon, Lock, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import inputCls from "@/lib/input-class-builder";
 import Label from "@/components/ui/custom/reuseable-lable";
@@ -15,6 +15,7 @@ import type { LoginPayload} from "../types";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,7 +34,10 @@ const Login = () => {
   ) => {
     try {
       await Login(data);
-    } catch (error) {}
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

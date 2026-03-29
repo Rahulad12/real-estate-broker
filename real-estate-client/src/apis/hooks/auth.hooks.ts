@@ -6,8 +6,9 @@ import type {
 } from "@/modules/auth-modules/types";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser, registerUser } from "../services/auth-services";
-import type { AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 import { authService } from "../auth";
+import { toast } from "sonner";
 
 export const useLogin = () => {
   return useMutation({
@@ -18,6 +19,10 @@ export const useLogin = () => {
     },
     onSuccess(data: LoginApiResponse) {
       authService.setAccessToken(data?.data?.token);
+      toast.success(data?.message);
+    },
+    onError(error: AxiosError<{ message: string }>) {
+      toast.error(error.response?.data?.message || "Login failed");
     },
   });
 };
@@ -30,7 +35,10 @@ export const useRegister = () => {
       return response.data;
     },
     onSuccess(data: RegisterApiResponse) {
-      console.log("Register successfull", data);
+      toast.success(data?.message);
     },
+    onError(error:AxiosError<{ message: string }>) {
+      toast.error(error.response?.data?.message || "Registration failed");
+    }
   });
 };

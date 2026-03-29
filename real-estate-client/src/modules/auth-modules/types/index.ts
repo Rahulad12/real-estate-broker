@@ -17,3 +17,4 @@ export interface RegisterApiResponse {
   success: boolean;
   message:string;
 }
+

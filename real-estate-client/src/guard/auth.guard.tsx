@@ -1,4 +1,4 @@
-import { Navigate } from "react-router";
+import {  redirect } from "react-router";
 import { authService } from "@/apis/auth";
 import type { ReactNode } from "react";
 
@@ -8,6 +8,6 @@ interface AuthGuardProps {
 
 export const AuthGuard = ({ children }: AuthGuardProps) => {
   const isAuth = authService.isAuthenticated();
-  if (isAuth) return <Navigate to="/dashboard" replace />;
+  if (isAuth) throw redirect("/dashboard");
   return <>{children}</>;
 };

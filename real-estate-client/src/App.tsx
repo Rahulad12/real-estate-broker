@@ -1,8 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryProvider from "./providers/react-query-provider";
-import appRouter from "./routes/app-router";
 import { RouterProvider } from "react-router";
 import { TooltipProvider } from "./components/ui/tooltip";
+import appRouter from "./routes/app-router";
 
 function App() {
   return (

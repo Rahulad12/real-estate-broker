@@ -30,15 +30,23 @@ export const createRealEstateController = async (
  * @Routes GET /api/real-estates
  */
 export const getRealEstatesController = async (
-  _req: Request,
+  req: Request,
   res: Response,
 ) => {
   try {
-    const realEstates = await getRealEstates();
+    const { page, limit, search, propertyType, minPrice, maxPrice } = req.query;
+    const result = await getRealEstates(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 10,
+      search as string | undefined,
+      propertyType as string | undefined,
+      minPrice ? Number(minPrice) : undefined,
+      maxPrice ? Number(maxPrice) : undefined,
+    );
     return res.status(200).json({
       success: true,
       message: 'Real estates fetched successfully',
-      data: realEstates,
+      data: result,
     });
   } catch (error: any) {
     console.log('Get Real Estates Error', error);

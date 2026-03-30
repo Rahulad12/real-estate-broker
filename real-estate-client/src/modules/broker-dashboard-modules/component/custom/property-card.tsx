@@ -103,9 +103,6 @@ const PropertyCard =({
         <p className="text-base font-bold text-foreground">
           {formatPrice(property.price)}
         </p>
-        <Button size="sm" variant="default" className="text-xs h-8 px-3" asChild>
-          <Link to={`/property/${property._id}`}>View Details</Link>
-        </Button>
       </CardFooter>
     </Card>
   );

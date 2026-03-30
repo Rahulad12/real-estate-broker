@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Building2, Heart, User, Menu, X } from "lucide-react";
+import {  Heart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -43,9 +43,9 @@ const Navbar = () => {
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            {/* <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Building2 className="h-4 w-4 text-primary-foreground" />
-            </div>
+            </div> */}
             <span className="text-lg font-bold tracking-tight text-secondary">
               GharBazar
             </span>
@@ -99,9 +99,11 @@ const Navbar = () => {
               <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-sm font-semibold">John Doe</p>
+                    <p className="text-sm font-semibold">
+                      {userInformation?.firstName} {userInformation?.lastName}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      john@example.com
+                      {userInformation?.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -117,7 +119,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    to="/saved"
+                    to="/dashboard/saved"
                     className="flex items-center gap-2 cursor-pointer"
                   >
                     <Heart className="h-4 w-4" />
@@ -145,7 +147,7 @@ const Navbar = () => {
               className="relative text-muted-foreground"
               asChild
             >
-              <Link to="/saved">
+              <Link to="/dashboard/saved">
                 <Heart className="h-5 w-5" />
                 {SAVED_COUNT > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] font-bold rounded-full">
@@ -170,13 +172,15 @@ const Navbar = () => {
                 <div className="flex items-center gap-3 p-6 border-b border-border">
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                      JD
+                      {userInformation?.firstName?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-semibold">John Doe</p>
+                    <p className="text-sm font-semibold">
+                      {userInformation?.firstName} {userInformation?.lastName}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      john@example.com
+                      {userInformation?.email}
                     </p>
                   </div>
                 </div>

@@ -18,3 +18,30 @@ export interface PropertyResponse {
   data: Property[];
   message: string;
 }
+
+export interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PropertyWithPaginationResponse {
+  success: boolean;
+  data: {
+    realEstates: Property[];
+    pagination: PaginationInfo;
+  };
+  message: string;
+}
+
+export interface PropertyQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  propertyType?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   SlidersHorizontal,
   Building2,
   ChevronDown,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,27 +28,46 @@ import {
 } from "@/components/ui/select";
 import PropertyCard from "../../component/custom/property-card";
 import PropertyCardSkeleton from "../../component/skeleton/property-card-skeleton";
+import type { Property } from "../../types/property.types";
 import { useGetAllListedProperty } from "@/apis/hooks/property.hooks";
 import {
   useGetFavoritesByUser,
   useToggleSaveAsFavorite,
 } from "@/apis/hooks/favorite.hooks";
 
+const LIMIT = 9;
+
 const BuyerDashboard = () => {
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
-  // ── Data fetching ──
-  const { data: allListedProperties, isLoading: allListedPropertiesLoading } =
-    useGetAllListedProperty();
+  // Debounce search input (500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
 
+  //mutation
+  //poperty fetching
+  const { data: propertyData, isLoading: allListedPropertiesLoading } =
+    useGetAllListedProperty({
+      page,
+      limit: LIMIT,
+      search: debouncedSearch || undefined,
+      propertyType: selectedTypes.length === 1 ? selectedTypes[0] : undefined,
+    });
   // Fetch all favorites with a high limit to get all saved IDs at once
   const { data: favoritesData } = useGetFavoritesByUser({
     page: 1,
     limit: 1000,
   });
-
+  //toggle save as favorite
   const { mutateAsync: toggleSaveAsFavorite } = useToggleSaveAsFavorite();
 
   // Build a Set of saved property IDs from the favorites API — isFavorite:true only
@@ -72,11 +93,30 @@ const BuyerDashboard = () => {
     setSelectedTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
+    setPage(1); // Reset to first page when filter changes
   };
 
-  const propertyTypes = [
-    ...new Set(allListedProperties?.map((p) => p.propertyType) || []),
-  ];
+  // Build paginator page list with ellipsis
+  const totalPages = propertyData?.pagination?.totalPages ?? 0;
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+    .filter((p) => {
+      if (totalPages <= 5) return true;
+      return p === 1 || p === totalPages || Math.abs(p - page) <= 1;
+    })
+    .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+      if (
+        idx > 0 &&
+        typeof arr[idx - 1] === "number" &&
+        (p as number) - (arr[idx - 1] as number) > 1
+      ) {
+        acc.push("...");
+      }
+      acc.push(p);
+      return acc;
+    }, []);
+
+  const total = propertyData?.pagination?.total ?? 0;
+  const properties = propertyData?.realEstates ?? [];
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -92,8 +132,7 @@ const BuyerDashboard = () => {
                 Properties for Sale
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                {allListedProperties?.length ?? 0} listings available ·{" "}
-                {savedPropertyIds.size} saved
+                {total} listings available · {savedPropertyIds.size} saved
               </p>
             </div>
           </div>
@@ -114,7 +153,11 @@ const BuyerDashboard = () => {
             />
             {search && (
               <button
-                onClick={() => setSearch("")}
+                onClick={() => {
+                  setSearch("");
+                  setDebouncedSearch("");
+                  setPage(1);
+                }}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-3.5 w-3.5" />
@@ -139,7 +182,7 @@ const BuyerDashboard = () => {
             <DropdownMenuContent align="start" className="w-44">
               <DropdownMenuLabel>Property Type</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {propertyTypes.map((type) => (
+              {["apartment", "house", "villa", "commercial"].map((type) => (
                 <DropdownMenuCheckboxItem
                   key={type}
                   checked={selectedTypes.includes(type)}
@@ -169,13 +212,28 @@ const BuyerDashboard = () => {
           {selectedTypes.map((type) => (
             <Badge
               key={type}
-              variant="secondary"
-              className="capitalize gap-1 cursor-pointer hover:bg-destructive/10 hover:text-destructive transition-colors"
+              variant="default"
+              className="capitalize gap-1 cursor-pointer hover:text-secondary-foreground transition-colors"
               onClick={() => toggleType(type)}
             >
               {type} <X className="h-3 w-3" />
             </Badge>
           ))}
+          {(search || selectedTypes.length > 0) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => {
+                setSearch("");
+                setDebouncedSearch("");
+                setSelectedTypes([]);
+                setPage(1);
+              }}
+            >
+              Clear all
+            </Button>
+          )}
         </div>
       </div>
 
@@ -187,7 +245,7 @@ const BuyerDashboard = () => {
               <PropertyCardSkeleton key={i} />
             ))}
           </div>
-        ) : allListedProperties?.length === 0 ? (
+        ) : properties.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
             <Building2 className="h-12 w-12 text-muted-foreground/30" />
             <p className="text-lg font-semibold text-foreground">
@@ -202,7 +260,9 @@ const BuyerDashboard = () => {
                 size="sm"
                 onClick={() => {
                   setSearch("");
+                  setDebouncedSearch("");
                   setSelectedTypes([]);
+                  setPage(1);
                 }}
               >
                 Clear all filters
@@ -212,11 +272,10 @@ const BuyerDashboard = () => {
         ) : (
           <>
             <p className="text-xs text-muted-foreground mb-4">
-              Showing {allListedProperties?.length} of{" "}
-              {allListedProperties?.length} properties
+              Showing {properties.length} of {total} properties
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {allListedProperties?.map((property) => (
+              {properties.map((property: Property) => (
                 <PropertyCard
                   key={property._id}
                   property={property}
@@ -228,6 +287,64 @@ const BuyerDashboard = () => {
           </>
         )}
       </div>
+
+      {/* ── Pagination ── */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-12 pt-6 border-t border-border">
+          <p className="text-xs text-muted-foreground">
+            Page <span className="text-foreground font-medium">{page}</span>{" "}
+            of{" "}
+            <span className="text-foreground font-medium">
+              {totalPages}
+            </span>
+          </p>
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </Button>
+
+            {/* Page numbers */}
+            {pageNumbers.map((p, idx) =>
+              p === "..." ? (
+                <span
+                  key={`ellipsis-${idx}`}
+                  className="w-8 h-8 flex items-center justify-center text-xs text-muted-foreground"
+                >
+                  ···
+                </span>
+              ) : (
+                <Button
+                  key={p}
+                  variant={page === p ? "default" : "outline"}
+                  size="icon"
+                  className="h-8 w-8 text-xs"
+                  onClick={() => setPage(p as number)}
+                >
+                  {p}
+                </Button>
+              ),
+            )}
+
+            {/* Next */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

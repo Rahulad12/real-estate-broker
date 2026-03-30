@@ -269,3 +269,5 @@
 {"error":{"statusCode":409},"level":"error","message":"Error saving favorite","service":"user-service"}
 {"error":{"statusCode":409},"level":"error","message":"Error saving favorite","service":"user-service"}
 {"error":{"statusCode":409},"level":"error","message":"Error saving favorite","service":"user-service"}
+{"email":"rahul@gmail.com","level":"error","message":"User already exists","service":"user-service"}
+{"error":{"statusCode":409},"level":"error","message":"Error registering user","service":"user-service"}

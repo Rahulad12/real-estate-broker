@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router";
-import {  Heart, User, Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Heart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,20 +22,29 @@ import {
 } from "@/components/ui/tooltip";
 import { useGetUserDetailsById } from "@/apis/hooks/user.hooks";
 import { useGetFavoritesCount } from "@/apis/hooks/favorite.hooks";
+import { authService } from "@/apis/auth";
 
 // const navLinks = [
 //   { label: "Buy", href: "/dashboard/buy", icon: Building2 },
 // ];
 
 const Navbar = () => {
+  //hookes
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  
+
   //mutation
   const { data: userDetails } = useGetUserDetailsById();
   const { data: favoritesCount } = useGetFavoritesCount();
-  
+
   const userInformation = userDetails?.data;
   const SAVED_COUNT = favoritesCount || 0;
+
+  //functions
+  const handleLogout = () => {
+    authService.clearStorage();
+    navigate("/");
+  };
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -86,9 +95,8 @@ const Navbar = () => {
                 >
                   <Avatar className="h-7 w-7">
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-                      {userInformation?.userName
-                        ?.charAt(0)
-                        ?.toUpperCase() || "U"}
+                      {userInformation?.userName?.charAt(0)?.toUpperCase() ||
+                        "U"}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium text-foreground hidden lg:block">
@@ -132,7 +140,10 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer">
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive cursor-pointer"
+                  onClick={handleLogout}
+                >
                   Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -230,6 +241,7 @@ const Navbar = () => {
                 <div className="absolute bottom-6 left-4 right-4">
                   <Button
                     variant="outline"
+                    onClick={handleLogout}
                     className="w-full text-destructive hover:text-destructive border-destructive/30"
                   >
                     Sign out

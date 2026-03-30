@@ -1973,3 +1973,21 @@
 {"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
 {"level":"info","message":"Getting favorites","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
 {"count":0,"level":"info","message":"Favorites retrieved successfully","service":"user-service"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting user details","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting favorites count","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting favorites","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Favorites count retrieved successfully","service":"user-service"}
+{"count":0,"level":"info","message":"Favorites retrieved successfully","service":"user-service"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting user details","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting favorites count","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"User authenticated","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Getting favorites","service":"user-service","userId":"69caa7c041fd02b54eb52efb"}
+{"level":"info","message":"Favorites count retrieved successfully","service":"user-service"}
+{"count":0,"level":"info","message":"Favorites retrieved successfully","service":"user-service"}

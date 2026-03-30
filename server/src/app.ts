@@ -8,6 +8,7 @@ import { DBCONN } from './config/db';
 import authRoutes from './routes/user.routes';
 import realEstateRouter from './routes/real-estate.routes';
 import favoriteRouter from './routes/favorite.routes';
+import { env } from './config/env';
 
 const app: Application = express();
 
@@ -17,7 +18,12 @@ DBCONN();
 //Middleware
 app.use(helmet());
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors(
+  {
+    origin: env.CLIENT_URL,
+    credentials: true
+  }
+));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

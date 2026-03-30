@@ -14,8 +14,14 @@ const app: Application = express();
 
 //connect to database
 DBCONN();
-
+console.log('Client URL:', env.CLIENT_URL);
 //Middleware
+app.use(cors(
+  {
+    origin: env.CLIENT_URL,
+    credentials: true
+  }
+));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(cors(

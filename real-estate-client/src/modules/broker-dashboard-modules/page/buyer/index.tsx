@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Heart,
   Search,
   SlidersHorizontal,
   Building2,
@@ -25,39 +24,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import PropertyCard from "../../component/custom/property-card";
 import PropertyCardSkeleton from "../../component/skeleton/property-card-skeleton";
 import { useGetAllListedProperty } from "@/apis/hooks/property.hooks";
+import {
+  useGetFavoritesByUser,
+  useToggleSaveAsFavorite,
+} from "@/apis/hooks/favorite.hooks";
 
 const BuyerDashboard = () => {
-  const isLoading = false;
-
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [showSavedOnly, setShowSavedOnly] = useState(false);
 
-  //mutation
-  const { data: allListedProperties } = useGetAllListedProperty();
+  // ── Data fetching ──
+  const { data: allListedProperties, isLoading: allListedPropertiesLoading } =
+    useGetAllListedProperty();
 
-  const toggleSave = (id: string) => {
-    setSavedIds((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
+  // Fetch all favorites with a high limit to get all saved IDs at once
+  const { data: favoritesData } = useGetFavoritesByUser({
+    page: 1,
+    limit: 1000,
+  });
+
+  const { mutateAsync: toggleSaveAsFavorite } = useToggleSaveAsFavorite();
+
+  // Build a Set of saved property IDs from the favorites API — isFavorite:true only
+  const savedPropertyIds = new Set<string>(
+    (favoritesData?.data?.favorites ?? [])
+      .filter((fav) => fav.isFavorite)
+      .map((fav) => fav.realEstateId._id)
+  );
+
+  const toggleSave = async (id: string) => {
+    const currentlySaved = savedPropertyIds.has(id);
+    try {
+      await toggleSaveAsFavorite({
+        realEstateId: id,
+        isFavorite: !currentlySaved,
+      });
+    } catch (error) {
+      console.error("Error toggling save:", error);
+    }
   };
 
   const toggleType = (type: string) => {
     setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
-  
-  const propertyTypes = [...new Set(allListedProperties?.map((p) => p.propertyType))];
+  const propertyTypes = [
+    ...new Set(allListedProperties?.map((p) => p.propertyType) || []),
+  ];
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -73,22 +92,10 @@ const BuyerDashboard = () => {
                 Properties for Sale
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                {allListedProperties?.length} listings available · {savedIds.size} saved
+                {allListedProperties?.length ?? 0} listings available ·{" "}
+                {savedPropertyIds.size} saved
               </p>
             </div>
-
-            {/* Saved toggle */}
-            <Button
-              variant={showSavedOnly ? "default" : "outline"}
-              size="sm"
-              className="gap-2 shrink-0"
-              onClick={() => setShowSavedOnly((v) => !v)}
-            >
-              <Heart
-                className={cn("h-4 w-4", showSavedOnly && "fill-current")}
-              />
-              Saved ({savedIds.size})
-            </Button>
           </div>
         </div>
       </div>
@@ -118,11 +125,7 @@ const BuyerDashboard = () => {
           {/* Type filter */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 h-9 text-sm"
-              >
+              <Button variant="outline" size="sm" className="gap-1.5 h-9 text-sm">
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Type
                 {selectedTypes.length > 0 && (
@@ -178,7 +181,7 @@ const BuyerDashboard = () => {
 
       {/* ── Listings Grid ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {isLoading ? (
+        {allListedPropertiesLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
               <PropertyCardSkeleton key={i} />
@@ -191,18 +194,15 @@ const BuyerDashboard = () => {
               No properties found
             </p>
             <p className="text-sm text-muted-foreground">
-              {showSavedOnly
-                ? "You haven't saved any properties yet."
-                : "Try adjusting your search or filters."}
+              Try adjusting your search or filters.
             </p>
-            {(search || selectedTypes.length > 0 || showSavedOnly) && (
+            {(search || selectedTypes.length > 0) && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {
                   setSearch("");
                   setSelectedTypes([]);
-                  setShowSavedOnly(false);
                 }}
               >
                 Clear all filters
@@ -212,14 +212,15 @@ const BuyerDashboard = () => {
         ) : (
           <>
             <p className="text-xs text-muted-foreground mb-4">
-              Showing {allListedProperties?.length} of {allListedProperties?.length} properties
+              Showing {allListedProperties?.length} of{" "}
+              {allListedProperties?.length} properties
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {allListedProperties?.map((property) => (
                 <PropertyCard
                   key={property._id}
                   property={property}
-                  isSaved={savedIds.has(property._id)}
+                  isSaved={savedPropertyIds.has(property._id)}
                   onToggleSave={toggleSave}
                 />
               ))}

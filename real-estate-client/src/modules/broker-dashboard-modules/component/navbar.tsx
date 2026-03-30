@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Building2, Heart, User, Search, Menu, X } from "lucide-react";
+import { Building2, Heart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,20 +21,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useGetUserDetailsById } from "@/apis/hooks/user.hooks";
-// import { cn } from "@/lib/utils";
+import { useGetFavoritesCount } from "@/apis/hooks/favorite.hooks";
 
 // const navLinks = [
 //   { label: "Buy", href: "/dashboard/buy", icon: Building2 },
 // ];
 
-const SAVED_COUNT = 3;
 const Navbar = () => {
-  // const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  
   //mutation
   const { data: userDetails } = useGetUserDetailsById();
+  const { data: favoritesCount } = useGetFavoritesCount();
+  
   const userInformation = userDetails?.data;
+  const SAVED_COUNT = favoritesCount || 0;
+
   return (
     <TooltipProvider delayDuration={200}>
       <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
@@ -48,31 +50,6 @@ const Navbar = () => {
               GharBazar
             </span>
           </Link>
-
-          {/* ── Desktop Nav Links ──
-          <ul className="hidden md:flex items-center gap-1">
-            {navLinks.map(({ label, href }) => {
-              const isActive = location.pathname === href;
-              return (
-                <li key={href}>
-                  <Link
-                    to={href}
-                    className={cn(
-                      "relative px-4 py-2 rounded-md text-sm font-medium transition-colors",
-                      isActive
-                        ? "text-secondary bg-primary/8"
-                        : "text-primary hover:text-zinc-800 hover:bg-secondary/20"
-                    )}
-                  >
-                    {label}
-                    {isActive && (
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-4 rounded-full bg-primary" />
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul> */}
 
           {/* ── Desktop Right Actions ── */}
           <div className="hidden md:flex items-center gap-1">

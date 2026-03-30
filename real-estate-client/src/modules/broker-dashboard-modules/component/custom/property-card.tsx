@@ -1,11 +1,11 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import type { Property } from "../../page/buyer";
 import { formatPrice, placeholderImage } from "@/utils/helper";
 import { Badge } from "@/components/ui/badge";
 import { Bath, BedDouble, Building2, Heart, Home, Link, MapPin, Maximize2, Warehouse } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { Property } from "../../types/property.types";
 
 
 const propertyTypeIcon = (type: string) => {

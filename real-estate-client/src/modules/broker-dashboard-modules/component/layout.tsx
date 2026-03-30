@@ -5,7 +5,7 @@ import { Outlet } from "react-router";
 const Layout= () => {
   return (
     <div className="flex min-h-screen flex-col">
-      <header>
+      <header className="bg-background border-b border-border sticky top-0 z-40">
         <Navbar />
       </header>
       <main className="flex-1">

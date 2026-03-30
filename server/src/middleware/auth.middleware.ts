@@ -14,7 +14,6 @@ export const authMiddleware = (
 ) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    console.log(token);
     if (!token) {
       logger.warn('No token provided');
       throw AppError.unauthorized('Unauthorized');
@@ -25,6 +24,6 @@ export const authMiddleware = (
     next();
   } catch (error) {
     logger.error('Invalid token', error);
-    next(error);
+    throw AppError.unauthorized('Unauthorized');
   }
 };

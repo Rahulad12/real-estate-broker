@@ -5,7 +5,7 @@ import type {
   RegisterPayload,
 } from "@/modules/auth-modules/types";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser, registerUser } from "../services/auth-services";
+import { loginUser, registerUser } from "../services/auth.services";
 import type { AxiosError, AxiosResponse } from "axios";
 import { authService } from "../auth";
 import { toast } from "sonner";

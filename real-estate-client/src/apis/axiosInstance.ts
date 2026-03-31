@@ -5,6 +5,13 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import { authService } from "./auth";
+
+// Extend Axios types to include custom config property
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean;
+  }
+}
 const axiosInstance = axios.create({
   baseURL: evn.API_BASE_URL,
   timeout: 10000,
@@ -31,30 +38,54 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
+      skipAuthRefresh?: boolean;
     };
 
-    // Token expired → attempt refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const status = error.response?.status;
+    const url = originalRequest?.url || "";
+
+    const isAuthRoute =
+      url.includes("/auth/login") ||
+      url.includes("/auth/register") ||
+      url.includes("/users/refresh-token");
+
+    if (
+      status === 401 &&
+      !originalRequest._retry &&
+      !isAuthRoute &&
+      !originalRequest.skipAuthRefresh
+    ) {
       originalRequest._retry = true;
 
       try {
-        const refreshToken = authService.getAccessToken();
+        const refreshToken = authService.getRefreshToken();
+
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
-          { refreshToken },
+          `${evn.API_BASE_URL}/auth/refresh-token`,
+          { refreshToken }
         );
 
-        authService.setAccessToken(data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        const newAccessToken = data.data.accessToken;
+
+        authService.setAccessToken(newAccessToken);
+
+        originalRequest.headers.set('Authorization', `Bearer ${newAccessToken}`);
 
         return axiosInstance(originalRequest);
-      } catch {
+      } catch (refreshError) {
         authService.clearStorage();
-        window.location.href = "/";
+        if (window.location.pathname !== "/") {
+          window.location.href = "/";
+        }
+        return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 export default axiosInstance;

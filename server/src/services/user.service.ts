@@ -2,9 +2,11 @@ import UserModel from '@/model/user.schema';
 import { AuthUserPayload, CreateUserPayload } from '@/types/user.types';
 import { AppError } from '@/utils/error.helper';
 import logger from '@/utils/logger';
-import { generateToken } from '@/utils/token-generator';
+import { generateAccessToken, generateRefreshToken } from '@/utils/token-generator';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
+import { verify } from 'jsonwebtoken';
+import { env } from '@/config/env';
 
 /**
  * Register a new user
@@ -70,16 +72,17 @@ export const authUser = async (authData: AuthUserPayload) => {
     }
 
     const isAuth = await bcrypt.compare(authData.password, user.password);
-    console.log(isAuth);
     if (!isAuth) {
       logger.error('Invalid password', { email: authData.email });
       throw AppError.unauthorized('Invalid credentials');
     }
 
-    const token = generateToken({ id: user._id, role: user.role });
+    const accessToken = generateAccessToken({ id: user._id, role: user.role });
+    const refreshToken = generateRefreshToken({ id: user._id, role: user.role });
     const { _id } = user.toObject();
     return {
-      token,
+      accessToken,
+      refreshToken,
       user: _id,
     };
   } catch (error: any) {
@@ -106,5 +109,33 @@ export const getUserDetailsById = async (userId: mongoose.Types.ObjectId) => {
   } catch (error: any) {
     logger.error('Error getting user details', { error });
     throw error;
+  }
+};
+
+/**
+ * Refresh access token using refresh token
+ * @returns New access token
+ */
+export const refreshAccessToken = async (refreshToken: string) => {
+  try {
+    logger.info('Refreshing access token');
+    
+    const decoded = verify(refreshToken, env.JWT_REFRESH_SECRET!) as any;
+    
+    const user = await UserModel.findById(decoded.id).select('-createdAt -updatedAt -password -__v');
+    if (!user) {
+      logger.error('User not found for refresh token', { userId: decoded.id });
+      throw AppError.unauthorized('Invalid refresh token');
+    }
+
+    const newAccessToken = generateAccessToken({ id: user._id, role: user.role });
+    
+    logger.info('Access token refreshed successfully', { userId: decoded.id });
+    return {
+      accessToken: newAccessToken,
+    };
+  } catch (error: any) {
+    logger.error('Error refreshing access token', { error });
+    throw AppError.unauthorized('Invalid refresh token');
   }
 };

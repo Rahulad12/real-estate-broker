@@ -18,7 +18,8 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess(data: LoginApiResponse) {
-      authService.setAccessToken(data?.data?.token);
+      authService.setAccessToken(data?.data?.accessToken);
+      authService.setRefreshToken(data?.data?.refreshToken);
       toast.success(data?.message);
     },
     onError(error: AxiosError<{ message: string }>) {

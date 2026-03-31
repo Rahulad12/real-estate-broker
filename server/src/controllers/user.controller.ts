@@ -1,4 +1,4 @@
-import { authUser, getUserDetailsById, registerUser } from '@/services/user.service';
+import { authUser, getUserDetailsById, registerUser, refreshAccessToken } from '@/services/user.service';
 import { Request, Response } from 'express';
 import { AuthRequest } from '@/middleware/auth.middleware';
 import { AuthUserPayload, CreateUserPayload } from '@/types/user.types';
@@ -63,6 +63,27 @@ export const getUserDetailsController = async (req: AuthRequest, res: Response) 
     });
   } catch (error: any) {
     console.log('Get User Details Error', error);
+    return res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Refresh access token
+ * @Routes POST /api/users/refresh-token
+ */
+export const refreshTokenController = async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+  try {
+    const result = await refreshAccessToken(refreshToken);
+    return res.status(200).json({
+      success: true,
+      data: result,
+      message: 'Access token refreshed successfully',
+    });
+  } catch (error: any) {
+    console.log('Refresh Token Error', error);
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });

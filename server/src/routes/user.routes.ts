@@ -2,6 +2,7 @@ import {
   authUserController,
   getUserDetailsController,
   registerUserController,
+  refreshTokenController,
 } from '@/controllers/user.controller';
 import { authMiddleware } from '@/middleware/auth.middleware';
 import { validateRequest } from '@/middleware/validation.middleware';
@@ -11,14 +12,15 @@ import {
 } from '@/validation/user.validation';
 import { Router } from 'express';
 
-const userRoutes = Router();
+const authRoutes = Router();
 
-userRoutes.post(
+authRoutes.post(
   '/register',
   validateRequest(CreateUserValidation),
   registerUserController,
 );
-userRoutes.post('/login', validateRequest(LoginValidation), authUserController);
-userRoutes.get('/user/me', authMiddleware, getUserDetailsController);
+authRoutes.post('/login', validateRequest(LoginValidation), authUserController);
+authRoutes.post('/refresh-token', refreshTokenController);
+authRoutes.get('/user/me', authMiddleware, getUserDetailsController);
 
-export default userRoutes;
+export default authRoutes;

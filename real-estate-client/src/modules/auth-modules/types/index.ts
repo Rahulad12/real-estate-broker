@@ -5,7 +5,8 @@ export type LoginPayload = z.infer<typeof LoginValidation>;
 export interface LoginApiResponse {
   success: boolean;
   data: {
-    token: string;
+    accessToken: string;
+    refreshToken: string;
     user: string;
   };
   message:string;

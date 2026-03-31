@@ -14,7 +14,7 @@ const app: Application = express();
 
 //connect to database
 DBCONN();
-console.log('Client URL:', env.CLIENT_URL);
+
 //Middleware
 app.use(cors(
   {

@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
         }
 
         const { data } = await axios.post(
-          `${evn.API_BASE_URL}/auth/refresh-token`,
+          `${env.API_BASE_URL}/auth/refresh-token`,
           { refreshToken }
         );
 

@@ -1,6 +1,5 @@
-# Project Wiki: Techkraft Real Estate
-
-Welcome to the technical wiki for the Techkraft Real Estate application. This document provides an in-depth look at the system architecture, data models, API design, and frontend structure.
+# Project Wiki: Real Estate
+Welcome to the technical wiki for the Real Estate application. This document provides an in-depth look at the system architecture, data models, API design, and frontend structure.
 
 ---
 

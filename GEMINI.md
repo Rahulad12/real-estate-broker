@@ -1,6 +1,5 @@
-# Gemini CLI Project Documentation - Techkraft Real Estate
-
-This document provides foundational mandates and architectural guidance for Gemini CLI agents working on the Techkraft Real Estate project.
+# Gemini CLI Project Documentation - Real Estate
+This document provides foundational mandates and architectural guidance for Gemini CLI agents working on the Real Estate project.
 
 ## Project Overview
 A full-stack real estate listing platform.

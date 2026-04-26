@@ -13,15 +13,12 @@ A full-stack real estate listing platform with user authentication, property lis
 ## Quick Start
 
 ### 1. Clone and Navigate
-
-```bash
-cd Techkraft
-```
+cd real-estate-broker
 
 ### 2. Backend Setup
 
 ```bash
-cd server
+cd real-estate-server
 
 # Install dependencies
 npm install

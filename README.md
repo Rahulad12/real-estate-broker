@@ -2,16 +2,6 @@
 
 A full-stack real estate listing platform with user authentication, property listings, and favorites management.
 
-## Project Structure
-
-```
-Techkraft/
-├── real-estate-client/    # React + TypeScript + Vite Frontend
-└── server/                # Node.js + Express + MongoDB Backend
-```
-
----
-
 ## Prerequisites
 
 - Node.js (v18 or higher)

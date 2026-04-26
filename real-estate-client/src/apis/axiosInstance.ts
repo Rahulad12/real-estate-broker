@@ -1,4 +1,4 @@
-import { evn } from "@/config/env";
+import { env } from "@/config/env";
 import axios, {
   AxiosError,
   type AxiosResponse,
@@ -13,7 +13,7 @@ declare module "axios" {
   }
 }
 const axiosInstance = axios.create({
-  baseURL: evn.API_BASE_URL,
+  baseURL: env.API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

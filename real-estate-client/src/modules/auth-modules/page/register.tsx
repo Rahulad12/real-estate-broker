@@ -64,7 +64,9 @@ const Register = () => {
     try {
       await RegisterUser(data);
     navigate("/")
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Password strength

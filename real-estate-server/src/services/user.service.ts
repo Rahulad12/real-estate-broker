@@ -98,6 +98,7 @@ export const authUser = async (authData: AuthUserPayload) => {
     };
   } catch (error: any) {
     logger.error('Error authenticating user', { error });
+    
     throw error;
   }
 };
@@ -155,7 +156,8 @@ export const updateEmail = async (
     await user.save();
 
     logger.info('User email updated successfully', { userId });
-    return user;
+    const { _id, email, role, userName, firstName, lastName } = user.toObject();
+    return { _id, email, role, userName, firstName, lastName };
   } catch (error: any) {
     logger.error('Error updating user email', { error });
     throw error;

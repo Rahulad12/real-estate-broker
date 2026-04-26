@@ -1,4 +1,4 @@
-import { UpdateEmailPayload, UpdatePasswordPayload } from "@/modules/profile-modules/types/profile.types";
+import type { UpdateEmailPayload, UpdatePasswordPayload } from "@/modules/profile-modules/types/profile.types";
 import axiosInstance from "../axiosInstance";
 
 export const getUserDetailsById = () => {

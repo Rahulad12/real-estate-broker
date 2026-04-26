@@ -3,7 +3,7 @@ import { AxiosError, type AxiosResponse } from "axios";
 import { getUserDetailsById, updateEmail, updatePassword } from "../services/user.service";
 import type { GetUserByIdResponse } from "@/modules/broker-dashboard-modules/types/user.types";
 import { toast } from "sonner";
-import { UpdateEmailPayload, UpdatePasswordPayload } from "@/modules/profile-modules/types/profile.types";
+import type { UpdateEmailPayload, UpdatePasswordPayload } from "@/modules/profile-modules/types/profile.types";
 
 export const useGetUserDetailsById = () => {
   return useQuery({

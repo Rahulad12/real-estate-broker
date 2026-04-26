@@ -16,10 +16,10 @@ interface EnvConfig {
 
 export const env: EnvConfig = {
   PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
-  MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/techkraft',
-  JWT_SECRET: process.env.JWT_SECRET || 'techkraft-secret',
+  MONGO_URI: process.env.MONGO_URI || '',
+  JWT_SECRET: process.env.JWT_SECRET || '',
   JWT_REFRESH_SECRET:
-    process.env.JWT_REFRESH_SECRET || 'techkraft-refresh-secret',
+    process.env.JWT_REFRESH_SECRET || '',
   NODE_ENV: process.env.NODE_ENV || 'development',
   JWT_EXPIRES_IN:
     (process.env.JWT_EXPIRES_IN as SignOptions['expiresIn']) || '15m',

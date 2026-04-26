@@ -8,7 +8,7 @@ import { useGetUserDetailsById, useUpdateEmail, useUpdatePassword } from "@/apis
 import { UpdateEmailSchema, UpdatePasswordSchema } from "../validation/profile.schema";
 import { Separator } from "@/components/ui/separator";
 import { User, Mail, Lock } from "lucide-react";
-import { UpdateEmailPayload, UpdatePasswordPayload } from "../types/profile.types";
+import type { UpdateEmailPayload, UpdatePasswordPayload } from "../types/profile.types";
 
 const ProfilePage = () => {
   const { data: userDetails, isLoading } = useGetUserDetailsById();

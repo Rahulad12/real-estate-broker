@@ -1,6 +1,7 @@
 import { sign } from 'jsonwebtoken';
 import { env } from '@/config/env';
 import { Types } from 'mongoose';
+
 interface TokenPayload {
   id: Types.ObjectId;
   role: string;

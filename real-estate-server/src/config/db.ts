@@ -3,9 +3,8 @@ import { env } from './env';
 
 export const DBCONN = async () => {
   try {
-    const conn = await mongoose.connect(env.MONGO_URI);
-    
-    
+    await mongoose.connect(env.MONGO_URI);
+    console.log('Database connected successfully');
   } catch (error) {
     console.error('Database connection error:', error);
     process.exit(1);

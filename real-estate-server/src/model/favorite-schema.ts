@@ -2,8 +2,7 @@ import { CreateFavoritePayload } from '@/types/favorite.types';
 import mongoose from 'mongoose';
 
 export interface IFavorite
-  extends mongoose.Document,
-    Omit<CreateFavoritePayload, 'realEstateId'> {
+  extends mongoose.Document, Omit<CreateFavoritePayload, 'realEstateId'> {
   _id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   realEstateId: mongoose.Types.ObjectId;

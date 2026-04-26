@@ -1,7 +1,19 @@
-import { authUser, getUserDetailsById, registerUser, refreshAccessToken } from '@/services/user.service';
+import {
+  authUser,
+  getUserDetailsById,
+  registerUser,
+  refreshAccessToken,
+  updateEmail,
+  updatePassword,
+} from '@/services/user.service';
 import { Request, Response } from 'express';
 import { AuthRequest } from '@/middleware/auth.middleware';
-import { AuthUserPayload, CreateUserPayload } from '@/types/user.types';
+import {
+  AuthUserPayload,
+  CreateUserPayload,
+  UpdateEmailPayload,
+  UpdatePasswordPayload,
+} from '@/types/user.types';
 import mongoose from 'mongoose';
 
 /**
@@ -20,7 +32,7 @@ export const registerUserController = async (
       message: 'User created successfully',
     });
   } catch (error: any) {
-    console.log('Create User Error', error);
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
@@ -41,7 +53,7 @@ export const authUserController = async (req: Request, res: Response) => {
       message: 'User Logged In Successfully',
     });
   } catch (error: any) {
-    console.log('Auth User Error', error);
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
@@ -52,7 +64,10 @@ export const authUserController = async (req: Request, res: Response) => {
  * Get user details by UserID
  * @Routes GET /api/auth/user/me
  */
-export const getUserDetailsController = async (req: AuthRequest, res: Response) => {
+export const getUserDetailsController = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   const userId = req.user?.id as mongoose.Types.ObjectId;
   try {
     const user = await getUserDetailsById(userId);
@@ -62,7 +77,56 @@ export const getUserDetailsController = async (req: AuthRequest, res: Response) 
       message: 'User details retrieved successfully',
     });
   } catch (error: any) {
-    console.log('Get User Details Error', error);
+    
+    return res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Update user email
+ * @Routes PATCH /api/auth/update-email
+ */
+export const updateEmailController = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  const userId = req.user?.id as mongoose.Types.ObjectId;
+  const payload: UpdateEmailPayload = req.body;
+  try {
+    const user = await updateEmail(userId, payload);
+    return res.status(200).json({
+      success: true,
+      data: user,
+      message: 'Email updated successfully',
+    });
+  } catch (error: any) {
+    
+    return res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Update user password
+ * @Routes PATCH /api/auth/update-password
+ */
+export const updatePasswordController = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  const userId = req.user?.id as mongoose.Types.ObjectId;
+  const payload: UpdatePasswordPayload = req.body;
+  try {
+    await updatePassword(userId, payload);
+    return res.status(200).json({
+      success: true,
+      message: 'Password updated successfully',
+    });
+  } catch (error: any) {
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
@@ -83,7 +147,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
       message: 'Access token refreshed successfully',
     });
   } catch (error: any) {
-    console.log('Refresh Token Error', error);
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });

@@ -1,5 +1,9 @@
 import { AuthRequest } from '@/middleware/auth.middleware';
-import { getFavorites, getFavoritesCountByUserId, toggleFavorite } from '@/services/favorite.service';
+import {
+  getFavorites,
+  getFavoritesCountByUserId,
+  toggleFavorite,
+} from '@/services/favorite.service';
 import { Response } from 'express';
 
 /**
@@ -12,7 +16,7 @@ export const toggleFavoriteController = async (
 ) => {
   try {
     const { realEstateId, isFavorite } = req.query;
-    console.log(realEstateId, isFavorite);
+    
     const favorite = await toggleFavorite({
       userId: req.user.id as string,
       realEstateId: realEstateId as string,

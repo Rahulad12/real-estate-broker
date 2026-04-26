@@ -20,7 +20,7 @@ export const useToggleSaveAsFavorite = () => {
     },
     onSuccess(data) {
       toast.success(data.message);
-      console.log("Favorite toggled successfully", data);
+      
       queryClient.invalidateQueries({ queryKey: ["favorites-by-user"] });
       queryClient.invalidateQueries({ queryKey: ["favorites-count"] });
     },

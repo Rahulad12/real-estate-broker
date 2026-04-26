@@ -1,4 +1,7 @@
-import { createRealEstate, getRealEstates } from '@/services/real-estate.service';
+import {
+  createRealEstate,
+  getRealEstates,
+} from '@/services/real-estate.service';
 import { CreateRealEstatePayload } from '@/types/real-estate.types';
 import { Request, Response } from 'express';
 
@@ -18,7 +21,7 @@ export const createRealEstateController = async (
       data: realEstate,
     });
   } catch (error: any) {
-    console.log('Create Real Estate Error', error);
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
@@ -29,10 +32,7 @@ export const createRealEstateController = async (
  * Get all real estate listings
  * @Routes GET /api/real-estates
  */
-export const getRealEstatesController = async (
-  req: Request,
-  res: Response,
-) => {
+export const getRealEstatesController = async (req: Request, res: Response) => {
   try {
     const { page, limit, search, propertyType, minPrice, maxPrice } = req.query;
     const result = await getRealEstates(
@@ -49,10 +49,9 @@ export const getRealEstatesController = async (
       data: result,
     });
   } catch (error: any) {
-    console.log('Get Real Estates Error', error);
+    
     return res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
   }
 };
-

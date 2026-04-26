@@ -19,7 +19,7 @@ export const toggleFavorite = async (favoriteDto: payload) => {
       realEstateId: favoriteDto.realEstateId,
       isFavorite: favoriteDto.isFavorite,
     });
-    console.log(favoriteDto.realEstateId, favoriteDto.isFavorite);
+    
     const existingFavorite = await FavoriteModel.findOne({
       userId: favoriteDto.userId,
       realEstateId: favoriteDto.realEstateId,
@@ -92,7 +92,6 @@ export const getFavorites = async (
         hasPrevPage: page > 1,
       },
     };
-    
   } catch (error) {
     logger.error('Error getting favorites', { error });
     throw error;
@@ -108,11 +107,13 @@ export const getFavoritesCountByUserId = async (userId: string) => {
   try {
     logger.info('Getting favorites count', { userId });
 
-    const count = await FavoriteModel.countDocuments({ userId, isFavorite: true });
+    const count = await FavoriteModel.countDocuments({
+      userId,
+      isFavorite: true,
+    });
     logger.info('Favorites count retrieved successfully');
     return count;
-
-  } catch (error) { 
+  } catch (error) {
     logger.error('Error getting favorites count', { error });
     throw error;
   }

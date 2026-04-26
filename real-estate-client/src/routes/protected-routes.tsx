@@ -2,6 +2,7 @@ import { requireAuth } from "@/guard/authLoader";
 import Layout from "@/modules/broker-dashboard-modules/component/layout";
 import BuyerDashboard from "@/modules/broker-dashboard-modules/page/buyer";
 import Favorite from "@/modules/broker-dashboard-modules/page/favorite";
+import ProfilePage from "@/modules/profile-modules/page";
 
 export const protectedRoutes = [
   {
@@ -17,6 +18,11 @@ export const protectedRoutes = [
         path: "saved",
         element: <Favorite />,
       },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+      },
     ],
   },
 ];
+

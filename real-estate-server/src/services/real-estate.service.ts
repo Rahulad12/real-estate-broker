@@ -34,32 +34,32 @@ export const getRealEstates = async (
 ) => {
   try {
     const skip = (page - 1) * limit;
-    
+
     // Build query filter
     const query: any = {};
-    
+
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
         { 'location.address': { $regex: search, $options: 'i' } },
       ];
     }
-    
+
     if (propertyType) {
       query.propertyType = propertyType;
     }
-    
+
     if (minPrice !== undefined || maxPrice !== undefined) {
       query.price = {};
       if (minPrice !== undefined) query.price.$gte = minPrice;
       if (maxPrice !== undefined) query.price.$lte = maxPrice;
     }
-    
+
     const [realEstates, total] = await Promise.all([
       RealEstateModel.find(query).skip(skip).limit(limit),
       RealEstateModel.countDocuments(query),
     ]);
-    
+
     return {
       realEstates,
       pagination: {

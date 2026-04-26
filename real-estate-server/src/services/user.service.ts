@@ -1,8 +1,16 @@
 import UserModel from '@/model/user.schema';
-import { AuthUserPayload, CreateUserPayload } from '@/types/user.types';
+import {
+  AuthUserPayload,
+  CreateUserPayload,
+  UpdateEmailPayload,
+  UpdatePasswordPayload,
+} from '@/types/user.types';
 import { AppError } from '@/utils/error.helper';
 import logger from '@/utils/logger';
-import { generateAccessToken, generateRefreshToken } from '@/utils/token-generator';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '@/utils/token-generator';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { verify } from 'jsonwebtoken';
@@ -78,7 +86,10 @@ export const authUser = async (authData: AuthUserPayload) => {
     }
 
     const accessToken = generateAccessToken({ id: user._id, role: user.role });
-    const refreshToken = generateRefreshToken({ id: user._id, role: user.role });
+    const refreshToken = generateRefreshToken({
+      id: user._id,
+      role: user.role,
+    });
     const { _id } = user.toObject();
     return {
       accessToken,
@@ -113,23 +124,101 @@ export const getUserDetailsById = async (userId: mongoose.Types.ObjectId) => {
 };
 
 /**
+ * Update user email
+ */
+export const updateEmail = async (
+  userId: mongoose.Types.ObjectId,
+  payload: UpdateEmailPayload,
+) => {
+  try {
+    logger.info('Updating user email', { userId, newEmail: payload.newEmail });
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      logger.error('User not found', { userId });
+      throw AppError.notFound('User not found');
+    }
+
+    const isAuth = await bcrypt.compare(payload.currentPassword, user.password);
+    if (!isAuth) {
+      logger.error('Invalid current password for email update', { userId });
+      throw AppError.unauthorized('Invalid current password');
+    }
+
+    const emailExists = await UserModel.findOne({ email: payload.newEmail });
+    if (emailExists) {
+      logger.error('Email already in use', { email: payload.newEmail });
+      throw AppError.conflict('Email already in use');
+    }
+
+    user.email = payload.newEmail;
+    await user.save();
+
+    logger.info('User email updated successfully', { userId });
+    return user;
+  } catch (error: any) {
+    logger.error('Error updating user email', { error });
+    throw error;
+  }
+};
+
+/**
+ * Update user password
+ */
+export const updatePassword = async (
+  userId: mongoose.Types.ObjectId,
+  payload: UpdatePasswordPayload,
+) => {
+  try {
+    logger.info('Updating user password', { userId });
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      logger.error('User not found', { userId });
+      throw AppError.notFound('User not found');
+    }
+
+    const isAuth = await bcrypt.compare(payload.currentPassword, user.password);
+    if (!isAuth) {
+      logger.error('Invalid current password for password update', { userId });
+      throw AppError.unauthorized('Invalid current password');
+    }
+
+    const hashedPassword = await bcrypt.hash(payload.newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    logger.info('User password updated successfully', { userId });
+    return { success: true };
+  } catch (error: any) {
+    logger.error('Error updating user password', { error });
+    throw error;
+  }
+};
+
+/**
  * Refresh access token using refresh token
  * @returns New access token
  */
 export const refreshAccessToken = async (refreshToken: string) => {
   try {
     logger.info('Refreshing access token');
-    
+
     const decoded = verify(refreshToken, env.JWT_REFRESH_SECRET!) as any;
-    
-    const user = await UserModel.findById(decoded.id).select('-createdAt -updatedAt -password -__v');
+
+    const user = await UserModel.findById(decoded.id).select(
+      '-createdAt -updatedAt -password -__v',
+    );
     if (!user) {
       logger.error('User not found for refresh token', { userId: decoded.id });
       throw AppError.unauthorized('Invalid refresh token');
     }
 
-    const newAccessToken = generateAccessToken({ id: user._id, role: user.role });
-    
+    const newAccessToken = generateAccessToken({
+      id: user._id,
+      role: user.role,
+    });
+
     logger.info('Access token refreshed successfully', { userId: decoded.id });
     return {
       accessToken: newAccessToken,

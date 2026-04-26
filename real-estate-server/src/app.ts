@@ -16,20 +16,20 @@ const app: Application = express();
 DBCONN();
 
 //Middleware
-app.use(cors(
-  {
+app.use(
+  cors({
     origin: env.CLIENT_URL,
-    credentials: true
-  }
-));
+    credentials: true,
+  }),
+);
 app.use(helmet());
 app.use(morgan('dev'));
-app.use(cors(
-  {
+app.use(
+  cors({
     origin: env.CLIENT_URL,
-    credentials: true
-  }
-));
+    credentials: true,
+  }),
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

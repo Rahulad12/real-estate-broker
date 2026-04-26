@@ -1,5 +1,10 @@
-import { CreateUserValidation, LoginValidation } from "@/validation/user.validation";
-import z from "zod";
+import {
+  CreateUserValidation,
+  LoginValidation,
+  UpdateEmailValidation,
+  UpdatePasswordValidation,
+} from '@/validation/user.validation';
+import z from 'zod';
 
 export interface ApiResponse {
   status: number;
@@ -20,4 +25,5 @@ export interface User {
 
 export type CreateUserPayload = z.infer<typeof CreateUserValidation>;
 export type AuthUserPayload = z.infer<typeof LoginValidation>;
-
+export type UpdateEmailPayload = z.infer<typeof UpdateEmailValidation>;
+export type UpdatePasswordPayload = z.infer<typeof UpdatePasswordValidation>;

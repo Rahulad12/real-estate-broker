@@ -8,7 +8,7 @@ const errorMiddleware = (
   err: AppError,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({

@@ -1,9 +1,28 @@
 # Architectural Rules
 
 ## Backend (real-estate-server)
-- **Layered Pattern**: Strictly follow `Routes -> Controllers -> Services -> Models`.
+- **Module-Based**: New features must be encapsulated in `src/modules/<feature-name>/`.
+- **Module Structure**: Every module must follow this internal layout:
+  ```
+  src/modules/<feature-name>/
+    <feature>.controller.ts   ← request/response handling
+    <feature>.service.ts      ← business logic
+    <feature>.schema.ts       ← Mongoose model/schema
+    <feature>.routes.ts       ← Express route definitions
+    <feature>.validation.ts   ← Zod or express-validator schemas
+    <feature>.types.ts        ← TypeScript interfaces and types
+  ```
+- **Shared Infrastructure** (not feature-specific) stays at `src/` level:
+  ```
+  src/
+    config/       ← DB, env, third-party config
+    middleware/   ← global middleware (auth, error handler, upload, etc.)
+    utils/        ← pure utility functions reused across modules
+    app.ts        ← Express app setup and route registration
+  ```
+- **Layered Pattern Within Module**: Strictly follow `Routes -> Controller -> Service -> Schema`.
 - **Statelessness**: The API must remain stateless, using JWT for authentication.
-- **Validation Layer**: All incoming requests must be validated using Zod or `express-validator` before reaching the service layer.
+- **Validation Layer**: All incoming requests must be validated in `<feature>.validation.ts` before reaching the service layer.
 - **Error Handling**: Use the centralized `error.middleware.ts`. Services should throw errors with status codes when possible.
 
 ## Frontend (real-estate-client)

@@ -2,12 +2,13 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import errorMiddleware from './middleware/error.middleware';
 import { authMiddleware } from './middleware/auth.middleware';
 import { DBCONN } from './config/db';
-import authRoutes from './routes/user.routes';
-import realEstateRouter from './routes/real-estate.routes';
-import favoriteRouter from './routes/favorite.routes';
+import authRoutes from './modules/user/user.routes';
+import realEstateRouter from './modules/real-estate/real-estate.routes';
+import favoriteRouter from './modules/favorite/favorite.routes';
 import { env } from './config/env';
 
 const app: Application = express();
@@ -32,6 +33,9 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Serve static files from public/uploads
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
 //Routes
 app.use('/api/auth', authRoutes);

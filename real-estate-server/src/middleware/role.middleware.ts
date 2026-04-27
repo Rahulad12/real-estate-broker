@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserRole } from '../types/user.types';
+import { UserRole } from '@/modules/user/user.types';
 import { AppError } from '@/utils/error.helper';
 
 export const authorize = (roles: UserRole[]) => {

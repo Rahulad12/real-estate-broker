@@ -9,6 +9,7 @@ import { DBCONN } from './config/db';
 import authRoutes from './modules/user/user.routes';
 import realEstateRouter from './modules/real-estate/real-estate.routes';
 import favoriteRouter from './modules/favorite/favorite.routes';
+import adminRouter from './modules/admin/admin.routes';
 import { env } from './config/env';
 
 const app: Application = express();
@@ -41,6 +42,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')
 app.use('/api/auth', authRoutes);
 app.use('/api/real-estate', realEstateRouter);
 app.use('/api/favorites', favoriteRouter);
+app.use('/api/admin', adminRouter);
 app.get('/api/health', authMiddleware, (_req: Request, res: Response) => {
   res.json({ message: 'Server is running' });
 });

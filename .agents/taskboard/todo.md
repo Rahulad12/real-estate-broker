@@ -11,7 +11,7 @@
 - [x] **Feature**: Frontend - Create `Profile` module with viewing and editing capabilities. (#15)
 - [x] **Feature**: Integration - Connect frontend profile page to the new backend APIs. (#17)
 - [x] **Feature**: Add trending properties section (views + likes based). (#20)
-- [ ] **Data**: Seed database with Nepal-only property data. (#21)
+- [x] **Data**: Seed database with Nepal-only property data. (#21)
 
 ## Medium Priority
 - [ ] **Refactor**: Move common types to a shared package if possible, or synchronize `real-estate-client` and `real-estate-server` types. (#8)
@@ -22,3 +22,9 @@
 - [ ] **Docs**: Add Swagger/OpenAPI documentation for the backend. (#11)
 - [ ] **Chore**: Update dependencies to latest stable versions. (#10)
 - [ ] **Feature**: Contact/Inquiry system for properties. (#6)
+
+## Admin Panel
+- [ ] **Feature**: Create admin panel with separate login page. (#22)
+- [ ] **Feature**: Admin can manage all properties (CRUD).
+- [ ] **Feature**: Admin can manage users (view, disable, delete).
+- [ ] **Feature**: Admin dashboard with statistics and analytics.

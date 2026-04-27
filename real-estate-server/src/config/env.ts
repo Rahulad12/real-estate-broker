@@ -15,7 +15,7 @@ interface EnvConfig {
 }
 
 export const env: EnvConfig = {
-  PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
+  PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
   MONGO_URI: process.env.MONGO_URI || '',
   JWT_SECRET: process.env.JWT_SECRET || '',
   JWT_REFRESH_SECRET:

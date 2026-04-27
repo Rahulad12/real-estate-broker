@@ -20,6 +20,10 @@ export const useLogin = () => {
     onSuccess(data: LoginApiResponse) {
       authService.setAccessToken(data?.data?.accessToken);
       authService.setRefreshToken(data?.data?.refreshToken);
+      // Store user role for admin guard
+      if (data?.data?.user?.role) {
+        localStorage.setItem("user_role", data.data.user.role);
+      }
       toast.success(data?.message);
     },
     onError(error: AxiosError<{ message: string }>) {

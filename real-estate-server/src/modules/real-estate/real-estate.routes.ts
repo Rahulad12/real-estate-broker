@@ -22,8 +22,8 @@ realEstateRouter.post(
 );
 realEstateRouter.get(
   '/',
-  authMiddleware,
-  authorize(['user', 'admin']),
+  // authMiddleware,
+  // authorize(['user', 'admin']),
   getRealEstatesController,
 );
 realEstateRouter.get(

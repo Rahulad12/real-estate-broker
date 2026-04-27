@@ -52,11 +52,11 @@ const Footer = () => {
           <div className="lg:col-span-2 flex flex-col gap-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 w-fit">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
                 <Building2 className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="text-lg font-bold tracking-tight text-foreground">
-                Nestify
+                GharBazar
               </span>
             </Link>
 

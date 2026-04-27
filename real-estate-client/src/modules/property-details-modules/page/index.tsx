@@ -1,10 +1,10 @@
 import { useGetPropertyById } from '@/apis/hooks/property.hooks';
 import { useParams } from 'react-router';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { PropertyMap } from '@/components/ui/map/property-map';
 import { useToggleSaveAsFavorite } from '@/apis/hooks/favorite.hooks';
-import { Heart } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Heart, MapPin, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function PropertyDetailsPage() {
@@ -15,25 +15,27 @@ export default function PropertyDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <Skeleton className="h-96 w-full rounded-lg" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-40 w-full" />
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Loader2 size={24} className="animate-spin text-primary" />
       </div>
     );
   }
 
   if (error || !property) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Property Not Found</CardTitle>
+          <CardHeader className="mb-6 space-y-2">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+              Not found
+            </p>
+            <CardTitle className="text-primary">Property Not Found</CardTitle>
+            <CardDescription>The property you're looking for doesn't exist.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600">The property you're looking for doesn't exist.</p>
+            <Button variant="link" className="text-secondary hover:text-button-hover">
+              Go back home
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -57,120 +59,139 @@ export default function PropertyDetailsPage() {
   }[property.type];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-background px-4 py-10">
       <div className="max-w-4xl mx-auto">
-        {/* Header with title and action buttons */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              {property.title}
-            </h1>
-            <p className="text-lg text-gray-600">{property.location.address}</p>
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleToggleFavorite}
-            className={isFavorited ? 'text-red-500' : ''}
-          >
-            <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
-          </Button>
-        </div>
-
-        {/* Main property image */}
-        <div className="mb-6">
-          {property.images && property.images.length > 0 ? (
-            <img
-              src={property.images[0]}
-              alt={property.title}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
-            />
-          ) : (
-            <div className="w-full h-96 bg-gray-300 rounded-lg flex items-center justify-center">
-              <p className="text-gray-600">No image available</p>
+        <CardHeader className="mb-6 space-y-2">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+                {listingTypeLabel}
+              </p>
+              <h1 className="text-2xl font-semibold text-primary">
+                {property.title}
+              </h1>
+              <p className="text-sm text-secondary-foreground flex items-center gap-1">
+                <MapPin size={14} className="text-muted-foreground" />
+                {property.location.address}
+              </p>
             </div>
-          )}
-        </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleToggleFavorite}
+              className={isFavorited ? 'text-red-500 border-red-500' : 'text-secondary'}
+            >
+              <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
+            </Button>
+          </div>
+        </CardHeader>
 
-        {/* Price and listing type */}
         <Card className="mb-6">
-          <CardContent className="pt-6">
+          <CardContent>
+            {property.images && property.images.length > 0 ? (
+              <img
+                src={property.images[0]}
+                alt={property.title}
+                className="w-full h-96 object-cover rounded-xl shadow-lg"
+              />
+            ) : (
+              <div className="w-full h-96 bg-muted rounded-xl flex items-center justify-center">
+                <p className="text-muted-foreground">No image available</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardHeader className="mb-4 space-y-2">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+              Pricing
+            </p>
+            <CardTitle>Price Details</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Price</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-muted-foreground mb-1">Price</p>
+                <p className="text-3xl font-bold text-primary">
                   ${property.price.toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Listing Type</p>
-                <p className="text-2xl font-semibold text-blue-600">{listingTypeLabel}</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">Listing Type</p>
+                <p className="text-2xl font-semibold text-secondary">{listingTypeLabel}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Property details grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Property Details</CardTitle>
+            <CardHeader className="mb-4 space-y-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+                Property
+              </p>
+              <CardTitle>Property Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-gray-600">Type</span>
-                <span className="font-semibold">{propertyTypeLabel}</span>
+                <span className="text-muted-foreground">Type</span>
+                <span className="font-semibold text-secondary-foreground">{propertyTypeLabel}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Status</span>
-                <span className="font-semibold capitalize">{property.status}</span>
+                <span className="text-muted-foreground">Status</span>
+                <span className="font-semibold text-secondary-foreground capitalize">{property.status}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Area</span>
-                <span className="font-semibold">{property.area} sq ft</span>
+                <span className="text-muted-foreground">Area</span>
+                <span className="font-semibold text-secondary-foreground">{property.area} sq ft</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Bedrooms</span>
-                <span className="font-semibold">{property.bedrooms}</span>
+                <span className="text-muted-foreground">Bedrooms</span>
+                <span className="font-semibold text-secondary-foreground">{property.bedrooms}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Bathrooms</span>
-                <span className="font-semibold">{property.bathrooms}</span>
+                <span className="text-muted-foreground">Bathrooms</span>
+                <span className="font-semibold text-secondary-foreground">{property.bathrooms}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Location</CardTitle>
+            <CardHeader className="mb-4 space-y-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+                Location
+              </p>
+              <CardTitle>Property Location</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 mb-4">{property.location.address}</p>
-              <div className="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center">
-                <p className="text-gray-600 text-sm">
-                  Coordinates: {property.location.lat}, {property.location.lng}
-                </p>
-              </div>
+              <p className="text-secondary-foreground mb-4">{property.location.address}</p>
+              <PropertyMap
+                lat={Number(property.location.lat)}
+                lng={Number(property.location.lng)}
+                className="h-48"
+              />
             </CardContent>
           </Card>
         </div>
 
-        {/* Description */}
         <Card>
-          <CardHeader>
+          <CardHeader className="mb-4 space-y-2">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+              Overview
+            </p>
             <CardTitle>Description</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700 leading-relaxed">{property.description}</p>
+            <p className="text-secondary-foreground leading-relaxed">{property.description}</p>
           </CardContent>
         </Card>
 
-        {/* Contact buttons */}
         <div className="mt-8 flex gap-4 justify-center">
-          <Button size="lg" className="px-8">
+          <Button size="lg" className="px-8 h-12">
             Contact Agent
           </Button>
-          <Button size="lg" variant="outline" className="px-8">
+          <Button size="lg" variant="outline" className="px-8 h-12">
             Schedule Viewing
           </Button>
         </div>

@@ -27,6 +27,14 @@ const realEstateSchema = new mongoose.Schema<IRealEstate>(
         type: String,
         required: true,
       },
+      city: { // Added city field
+        type: String,
+        required: true,
+      },
+      country: { // Added country field
+        type: String,
+        required: true,
+      },
       lng: {
         type: String,
         required: true,
@@ -64,6 +72,10 @@ const realEstateSchema = new mongoose.Schema<IRealEstate>(
     images: {
       type: [String],
       default: [],
+    },
+    likes: { // Added likes field for trending
+      type: Number,
+      default: 0,
     },
   },
   {

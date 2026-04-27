@@ -18,15 +18,21 @@ const PropertyCard =({
   property,
   isSaved,
   onToggleSave,
+  onCardClick,
 }: {
   property: Property;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
+  onCardClick?: () => void;
 }) =>{
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/dashboard/properties/${property._id}`);
+    if (onCardClick) {
+      onCardClick();
+    } else {
+      navigate(`/dashboard/properties/${property._id}`);
+    }
   };
 
   const handleSaveClick = (e: React.MouseEvent) => {

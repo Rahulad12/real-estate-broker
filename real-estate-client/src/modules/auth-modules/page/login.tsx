@@ -5,7 +5,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginValidation } from "../validation-schema/user.validation";
 import { EyeIcon, EyeOffIcon, Loader2, Lock, Mail } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import inputCls from "@/lib/input-class-builder";
 import Label from "@/components/ui/custom/reuseable-lable";
@@ -20,6 +20,8 @@ import {
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const {
     register,
     handleSubmit,
@@ -36,7 +38,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<LoginPayload> = async (data: LoginPayload) => {
     try {
       await Login(data);
-      navigate("/dashboard");
+      navigate(redirectTo);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -161,6 +163,14 @@ const Login = () => {
             className="text-secondary hover:text-button-hover font-normal transition-colors"
           >
             Create one
+          </Link>
+        </p>
+        <p className="mt-4 text-center text-[13px] text-zinc-500 font-light">
+          <Link
+            to="/"
+            className="text-secondary hover:text-button-hover font-normal transition-colors"
+          >
+            ← Back to home
           </Link>
         </p>
       </Card>

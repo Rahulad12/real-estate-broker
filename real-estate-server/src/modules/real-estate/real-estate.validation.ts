@@ -6,6 +6,8 @@ export const createRealEstateSchema = z.object({
   price: z.number().positive('Price must be positive'),
   location: z.object({
     address: z.string().min(2),
+    city: z.string().min(2),
+    country: z.string().min(2),
     lng: z.string().min(2),
     lat: z.string().min(2),
   }),
@@ -16,4 +18,5 @@ export const createRealEstateSchema = z.object({
   status: z.enum(['available', 'sold', 'pending']).default('available'),
   type: z.enum(['buy', 'rent']),
   images: z.array(z.string()).optional().default([]),
+  likes: z.number().int().nonnegative().optional().default(0),
 });

@@ -12,14 +12,16 @@
 - [x] Property listing API.
 - [x] Property creation API.
 - [x] Dashboard view for browsing properties.
-- [ ] Image upload for property listings.
-- [ ] Detailed property view page.
+- [x] Browse/Search properties page with filters.
+- [x] Property details page.
+- [x] Image upload for property listings.
 
 ## Milestone 3: Favorites & User Interaction
 **Status**: In Progress
 - [x] Toggle favorite status API.
 - [x] Favorites page in dashboard.
 - [x] User profile editing.
+- [x] Auth guard - redirect to login when accessing property details if not logged in.
 - [ ] Contact/Inquiry system for properties.
 
 ## Milestone 4: Advanced Features & Deployment

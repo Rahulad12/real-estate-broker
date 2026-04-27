@@ -1,14 +1,15 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { useGetUserDetailsById, useUpdateEmail, useUpdatePassword } from "@/apis/hooks/user.hooks";
 import { UpdateEmailSchema, UpdatePasswordSchema } from "../validation/profile.schema";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Loader2 } from "lucide-react";
 import type { UpdateEmailPayload, UpdatePasswordPayload } from "../types/profile.types";
+import inputCls from "@/lib/input-class-builder";
 
 const ProfilePage = () => {
   const { data: userDetails, isLoading } = useGetUserDetailsById();
@@ -46,114 +47,184 @@ const ProfilePage = () => {
     });
   };
 
-
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Loader2 size={24} className="animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
-        <p className="text-muted-foreground">Manage your account information and security.</p>
-      </div>
+    <div className="min-h-screen bg-background px-4 py-10">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <CardHeader className="mb-6 space-y-2">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+            Account settings
+          </p>
+          <h1 className="text-2xl font-semibold text-primary">
+            Profile Settings
+          </h1>
+          <p className="text-sm text-secondary-foreground font-light">
+            Manage your account information and security.
+          </p>
+        </CardHeader>
 
-      <div className="grid gap-8">
-        {/* User Information Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" /> Personal Information
-            </CardTitle>
-            <CardDescription>Your account details.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Username</p>
-                <p className="text-lg">{user?.userName}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Full Name</p>
-                <p className="text-lg">{user?.firstName} {user?.lastName}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Email Address</p>
-                <p className="text-lg">{user?.email}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Role</p>
-                <p className="text-lg capitalize">{user?.role}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Separator />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Change Email Card */}
+        <div className="grid gap-8">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Mail className="h-5 w-5" /> Change Email
+                <User className="h-5 w-5 text-secondary" /> Personal Information
               </CardTitle>
-              <CardDescription>Update your email address.</CardDescription>
+              <CardDescription>Your account details.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
-                <Field>
-                  <FieldLabel>New Email</FieldLabel>
-                  <Input {...emailForm.register("newEmail")} type="email" placeholder="new@example.com" />
-                  <FieldError errors={[emailForm.formState.errors.newEmail]} />
-                </Field>
-                <Field>
-                  <FieldLabel>Current Password</FieldLabel>
-                  <Input {...emailForm.register("currentPassword")} type="password" placeholder="••••••••" />
-                  <FieldError errors={[emailForm.formState.errors.currentPassword]} />
-                </Field>
-                <Button type="submit" className="w-full" disabled={updateEmailMutation.isPending}>
-                  {updateEmailMutation.isPending ? "Updating..." : "Update Email"}
-                </Button>
-              </form>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Username</p>
+                  <p className="text-lg text-secondary-foreground">{user?.userName}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Full Name</p>
+                  <p className="text-lg text-secondary-foreground">{user?.firstName} {user?.lastName}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Email Address</p>
+                  <p className="text-lg text-secondary-foreground">{user?.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Role</p>
+                  <p className="text-lg text-secondary-foreground capitalize">{user?.role}</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Change Password Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5" /> Change Password
-              </CardTitle>
-              <CardDescription>Ensure your account is using a long, random password.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-                <Field>
-                  <FieldLabel>New Password</FieldLabel>
-                  <Input {...passwordForm.register("newPassword")} type="password" placeholder="••••••••" />
-                  <FieldError errors={[passwordForm.formState.errors.newPassword]} />
-                </Field>
-                <Field>
-                  <FieldLabel>Confirm New Password</FieldLabel>
-                  <Input {...passwordForm.register("confirmPassword")} type="password" placeholder="••••••••" />
-                  <FieldError errors={[passwordForm.formState.errors.confirmPassword]} />
-                </Field>
-                <Field>
-                  <FieldLabel>Current Password</FieldLabel>
-                  <Input {...passwordForm.register("currentPassword")} type="password" placeholder="••••••••" />
-                  <FieldError errors={[passwordForm.formState.errors.currentPassword]} />
-                </Field>
-                <Button type="submit" className="w-full" disabled={updatePasswordMutation.isPending}>
-                  {updatePasswordMutation.isPending ? "Updating..." : "Update Password"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <Separator />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader className="mb-6 space-y-2">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+                  Security
+                </p>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-secondary" /> Change Email
+                </CardTitle>
+                <CardDescription>Update your email address.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-6" noValidate>
+                  <Field>
+                    <FieldLabel className="mb-2">New Email</FieldLabel>
+                    <Input 
+                      {...emailForm.register("newEmail")} 
+                      type="email" 
+                      placeholder="new@example.com"
+                      className={inputCls(!!emailForm.formState.errors.newEmail)}
+                    />
+                    {emailForm.formState.errors.newEmail && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {emailForm.formState.errors.newEmail.message}
+                      </p>
+                    )}
+                  </Field>
+                  <Field>
+                    <FieldLabel className="mb-2">Current Password</FieldLabel>
+                    <Input 
+                      {...emailForm.register("currentPassword")} 
+                      type="password" 
+                      placeholder="Enter password"
+                      className={inputCls(!!emailForm.formState.errors.currentPassword)}
+                    />
+                    {emailForm.formState.errors.currentPassword && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {emailForm.formState.errors.currentPassword.message}
+                      </p>
+                    )}
+                  </Field>
+                  <Button type="submit" className="h-10 w-full" disabled={updateEmailMutation.isPending}>
+                    {updateEmailMutation.isPending ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 size={14} className="animate-spin" />
+                        Updating...
+                      </span>
+                    ) : (
+                      "Update Email"
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="mb-6 space-y-2">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-secondary">
+                  Security
+                </p>
+                <CardTitle className="flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-secondary" /> Change Password
+                </CardTitle>
+                <CardDescription>Ensure your account is using a long, random password.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-6" noValidate>
+                  <Field>
+                    <FieldLabel className="mb-2">New Password</FieldLabel>
+                    <Input 
+                      {...passwordForm.register("newPassword")} 
+                      type="password" 
+                      placeholder="Min 8 characters"
+                      className={inputCls(!!passwordForm.formState.errors.newPassword)}
+                    />
+                    {passwordForm.formState.errors.newPassword && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {passwordForm.formState.errors.newPassword.message}
+                      </p>
+                    )}
+                  </Field>
+                  <Field>
+                    <FieldLabel className="mb-2">Confirm New Password</FieldLabel>
+                    <Input 
+                      {...passwordForm.register("confirmPassword")} 
+                      type="password" 
+                      placeholder="Confirm password"
+                      className={inputCls(!!passwordForm.formState.errors.confirmPassword)}
+                    />
+                    {passwordForm.formState.errors.confirmPassword && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {passwordForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </Field>
+                  <Field>
+                    <FieldLabel className="mb-2">Current Password</FieldLabel>
+                    <Input 
+                      {...passwordForm.register("currentPassword")} 
+                      type="password" 
+                      placeholder="Enter current password"
+                      className={inputCls(!!passwordForm.formState.errors.currentPassword)}
+                    />
+                    {passwordForm.formState.errors.currentPassword && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {passwordForm.formState.errors.currentPassword.message}
+                      </p>
+                    )}
+                  </Field>
+                  <Button type="submit" className="h-10 w-full" disabled={updatePasswordMutation.isPending}>
+                    {updatePasswordMutation.isPending ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 size={14} className="animate-spin" />
+                        Updating...
+                      </span>
+                    ) : (
+                      "Update Password"
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

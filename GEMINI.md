@@ -9,15 +9,18 @@ A full-stack real estate listing platform.
 ## Directory Structure
 - `real-estate-client/`: Frontend application.
 - `real-estate-server/`: Backend API.
+- `.agents/`: Agent configuration, rules, and taskboard.
 
 ## Core Mandates & Standards
 
-### Workflow Mandate: Issue-First Development
-- **Requirement Analysis**: For every new requirement or change, first analyze the scope and break it down.
-- **Remote Sync**: Create corresponding issues on GitHub (using `gh issue create`) and link them to the relevant milestone.
-- **Local Sync**: Update `.gemini/taskboard/milestones.md` and `todo.md` with the new tasks and their GitHub issue IDs.
-- **Implementation**: Only begin implementation after the above synchronization is complete.
-- **Closure**: Close issues on GitHub and mark local tasks as completed once the feature/fix is verified and linted.
+### Workflow Mandate: Milestone & Issue-First Development
+We strictly follow a "Plan Before Action" workflow. No implementation should begin without updating the roadmap.
+1. **Requirement Analysis**: Analyze the scope and break it down into milestones and tasks.
+2. **Milestone Update**: Update `.agents/taskboard/milestones.md` with new/updated milestones.
+3. **Task Update**: Update `.agents/taskboard/todo.md` with granular tasks.
+4. **Remote Sync**: Create corresponding issues on GitHub (using `gh issue create`) and link them to the relevant milestone.
+5. **Implementation**: Only begin implementation after the above synchronization is complete.
+6. **Validation & Closure**: Verify changes with tests/linting, then close GitHub issues and mark local tasks as completed.
 
 ### General
 - **Imports**: Use `@/` alias for absolute imports in both client and server.
@@ -27,15 +30,14 @@ A full-stack real estate listing platform.
 - **Formatting**: Server uses Prettier (`npm run format`). Client uses ESLint for formatting.
 
 ### Backend (`real-estate-server/`)
-- **Architecture**: Layered approach (Routes -> Controllers -> Services -> Models).
+- **Architecture**: Module-based approach in `src/modules/`.
+  - Each module is self-contained: `routes`, `controller`, `service`, `schema`, `validation`, and `types`.
 - **Responses**: Consistent JSON format:
   ```json
   { "success": true, "message": "...", "data": ... }
   ```
 - **Error Handling**: Use `try-catch` in controllers and pass errors to the error middleware or handle them with status codes.
-- **Models**: Located in `src/model/` (named `*-schema.ts`).
-- **Services**: Business logic stays in `src/services/`.
-- **Validation**: Use `express-validator` or Zod in middleware.
+- **Database**: Mongoose (MongoDB). Connection managed in `src/config/db.ts`.
 
 ### Frontend (`real-estate-client/`)
 - **Architecture**: Feature-based modules in `src/modules/`.
@@ -48,12 +50,14 @@ A full-stack real estate listing platform.
 ## Common Workflows
 
 ### Adding a New API Entity (Server)
-1. Define Types: `src/types/entity.types.ts`.
-2. Create Schema: `src/model/entity-schema.ts`.
-3. Implement Service: `src/services/entity.service.ts`.
-4. Implement Controller: `src/controllers/entity.controller.ts`.
-5. Define Routes: `src/routes/entity.routes.ts`.
-6. Register Route: `src/app.ts`.
+1. Create module folder: `src/modules/new-entity/`.
+2. Define Types: `new-entity.types.ts`.
+3. Create Schema: `new-entity.schema.ts`.
+4. Implement Service: `new-entity.service.ts`.
+5. Implement Validation: `new-entity.validation.ts`.
+6. Implement Controller: `new-entity.controller.ts`.
+7. Define Routes: `new-entity.routes.ts`.
+8. Register Route in `src/app.ts`.
 
 ### Adding a New Module (Client)
 1. Create folder in `src/modules/new-module/`.
@@ -78,4 +82,4 @@ A full-stack real estate listing platform.
 ## Environment Variables
 Ensure `.env` files are updated when adding new external dependencies or configurations. Never commit `.env` files.
 - Client: `VITE_API_BASE_URL`
-- Server: `MONGO_URI`, `JWT_SECRET`, `PORT`
+- Server: `MONGO_URI`, `JWT_SECRET`, `PORT`, `CLIENT_URL`

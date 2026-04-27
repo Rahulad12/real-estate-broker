@@ -9,7 +9,8 @@
     "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
+    "seed": "ts-node src/scripts/seed-nepal-properties.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -10,7 +10,8 @@
 - [x] **Feature**: Backend - Implement update email and password APIs with current password verification. (#18)
 - [x] **Feature**: Frontend - Create `Profile` module with viewing and editing capabilities. (#15)
 - [x] **Feature**: Integration - Connect frontend profile page to the new backend APIs. (#17)
-- [ ] **Feature**: Add trending properties section (views + likes based). (#20)
+- [x] **Feature**: Add trending properties section (views + likes based). (#20)
+- [ ] **Data**: Seed database with Nepal-only property data. (#21)
 
 ## Medium Priority
 - [ ] **Refactor**: Move common types to a shared package if possible, or synchronize `real-estate-client` and `real-estate-server` types. (#8)

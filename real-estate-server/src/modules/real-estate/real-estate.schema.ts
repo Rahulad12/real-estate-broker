@@ -77,6 +77,10 @@ const realEstateSchema = new mongoose.Schema<IRealEstate>(
       type: Number,
       default: 0,
     },
+    views: { // Added views field for trending
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

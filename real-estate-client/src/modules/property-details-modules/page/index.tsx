@@ -5,13 +5,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { PropertyMap } from '@/components/ui/map/property-map';
 import { useToggleSaveAsFavorite } from '@/apis/hooks/favorite.hooks';
 import { Heart, MapPin, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useIncrementPropertyViews } from '@/apis/hooks/property.hooks';
 
 export default function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const { data: property, isLoading, error } = useGetPropertyById(id);
   const { mutate: toggleFavorite } = useToggleSaveAsFavorite();
+  const { mutate: incrementViews } = useIncrementPropertyViews();
   const [isFavorited, setIsFavorited] = useState(false);
+
+  // Increment views when property is loaded
+  useEffect(() => {
+    if (id) {
+      incrementViews(id);
+    }
+  }, [id, incrementViews]);
 
   if (isLoading) {
     return (

@@ -9,15 +9,15 @@ A full-stack real estate listing platform.
 ## Directory Structure
 - `real-estate-client/`: Frontend application.
 - `real-estate-server/`: Backend API.
-- `.agents/`: Agent configuration, rules, and taskboard.
+- `.gemini/`: Agent configuration, rules, and taskboard.
 
 ## Core Mandates & Standards
 
 ### Workflow Mandate: Milestone & Issue-First Development
 We strictly follow a "Plan Before Action" workflow. No implementation should begin without updating the roadmap.
 1. **Requirement Analysis**: Analyze the scope and break it down into milestones and tasks.
-2. **Milestone Update**: Update `.agents/taskboard/milestones.md` with new/updated milestones.
-3. **Task Update**: Update `.agents/taskboard/todo.md` with granular tasks.
+2. **Milestone Update**: Update `.gemini/taskboard/milestones.md` with new/updated milestones.
+3. **Task Update**: Update `.gemini/taskboard/todo.md` with granular tasks.
 4. **Remote Sync**: Create corresponding issues on GitHub (using `gh issue create`) and link them to the relevant milestone.
 5. **Implementation**: Only begin implementation after the above synchronization is complete.
 6. **Validation & Closure**: Verify changes with tests/linting, then close GitHub issues and mark local tasks as completed.

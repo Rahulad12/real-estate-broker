@@ -97,3 +97,36 @@ export const uploadPropertyImages = async (
     throw error;
   }
 };
+
+export const incrementPropertyViews = async (id: string) => {
+  try {
+    const property = await RealEstateModel.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { new: true },
+    );
+
+    if (!property) {
+      const error = new Error('Property not found');
+      (error as any).statusCode = 404;
+      throw error;
+    }
+
+    return property;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTrendingProperties = async (limit: number = 6) => {
+  try {
+    // Calculate trending score: (likes * 2) + views
+    const properties = await RealEstateModel.find()
+      .sort({ likes: -1, views: -1 })
+      .limit(limit);
+    
+    return properties;
+  } catch (error) {
+    throw error;
+  }
+};

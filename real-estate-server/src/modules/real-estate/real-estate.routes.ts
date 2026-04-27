@@ -3,6 +3,8 @@ import {
   getRealEstatesController,
   getPropertyByIdController,
   uploadPropertyImagesController,
+  incrementPropertyViewsController,
+  getTrendingPropertiesController,
 } from './real-estate.controller';
 import { authMiddleware } from '@/middleware/auth.middleware';
 import { authorize } from '@/middleware/role.middleware';
@@ -38,6 +40,14 @@ realEstateRouter.post(
   authorize(['admin']),
   uploadImages.array('images', 10),
   uploadPropertyImagesController,
+);
+realEstateRouter.post(
+  '/:id/view',
+  incrementPropertyViewsController,
+);
+realEstateRouter.get(
+  '/trending',
+  getTrendingPropertiesController,
 );
 
 export default realEstateRouter;

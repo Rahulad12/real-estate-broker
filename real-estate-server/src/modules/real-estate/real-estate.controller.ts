@@ -3,6 +3,8 @@ import {
   getRealEstates,
   getPropertyById,
   uploadPropertyImages,
+  incrementPropertyViews,
+  getTrendingProperties,
 } from './real-estate.service';
 import { getImageUrl } from '@/middleware/upload.middleware';
 import { CreateRealEstatePayload } from './real-estate.types';
@@ -89,6 +91,43 @@ export const uploadPropertyImagesController = async (
       success: true,
       message: 'Images uploaded successfully',
       data: updatedProperty,
+    });
+  } catch (error: any) {
+    return res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message });
+  }
+};
+
+export const incrementPropertyViewsController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const property = await incrementPropertyViews(req.params.id);
+    return res.status(200).json({
+      success: true,
+      message: 'Property views incremented',
+      data: property,
+    });
+  } catch (error: any) {
+    return res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message });
+  }
+};
+
+export const getTrendingPropertiesController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const limit = req.query.limit ? Number(req.query.limit) : 6;
+    const properties = await getTrendingProperties(limit);
+    return res.status(200).json({
+      success: true,
+      message: 'Trending properties fetched successfully',
+      data: properties,
     });
   } catch (error: any) {
     return res

@@ -15,6 +15,7 @@
 - [x] Browse/Search properties page with filters.
 - [x] Property details page.
 - [x] Image upload for property listings.
+- [ ] Trending properties feature (views + likes tracking).
 
 ## Milestone 3: Favorites & User Interaction
 **Status**: In Progress

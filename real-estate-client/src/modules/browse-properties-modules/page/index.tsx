@@ -7,10 +7,12 @@ import BrowsePropertyCard from "../component/browse-property-card";
 import type { PropertyQueryParams } from "@/modules/broker-dashboard-modules/types/property.types";
 import Footer from "@/modules/broker-dashboard-modules/component/footer";
 import { LandingNavbar } from "@/modules/landing-modules/component/landing-navbar";
+import { useSearchParams } from "react-router";
 
 const BrowseProperties = () => {
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<PropertyQueryParams>({
-    search: "",
+    search: searchParams.get("search") || "",
     propertyType: "",
     minPrice: undefined,
     maxPrice: undefined,

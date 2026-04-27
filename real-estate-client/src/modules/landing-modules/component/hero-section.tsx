@@ -1,8 +1,22 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck } from "lucide-react";
-import { Link } from "react-router";
+import { ArrowRight, ShieldCheck, Search } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Input } from "@/components/ui/input";
 
 export const HeroSection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate("/browse");
+    }
+  };
+
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
       {/* Background */}
@@ -33,8 +47,31 @@ export const HeroSection = () => {
           Browse thousands of verified properties. From cozy apartments to luxurious villas, discover the space that matches your lifestyle.
         </p>
 
-        {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {/* Search bar */}
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Search by location, property type, or keyword..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 h-12 text-base"
+              />
+            </div>
+            <Button 
+              type="submit"
+              size="lg" 
+              className="h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+            >
+              Search
+            </Button>
+          </div>
+        </form>
+
+        {/* CTA button */}
+        <div className="flex items-center justify-center">
           <Button 
             asChild 
             size="lg" 
@@ -43,16 +80,6 @@ export const HeroSection = () => {
             <Link to="/register">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button 
-            asChild 
-            variant="outline" 
-            size="lg" 
-            className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/5"
-          >
-            <Link to="/browse">
-              Browse Properties
             </Link>
           </Button>
         </div>

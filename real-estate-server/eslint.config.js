@@ -5,23 +5,22 @@ const js = require('@eslint/js');
 module.exports = [
   {
     files: ['**/*.ts'],
+    ignores: ['node_modules/**', 'dist/**', 'build/**'],
     languageOptions: {
       ecmaVersion: 2020,
-      sourceType: 'module', // Changed to 'module' for compatibility if needed, but might need 'script' for commonjs. Let's stick to module for now and see.
-      parser: '@typescript-eslint/parser',
+      sourceType: 'module',
+      parser: require('@typescript-eslint/parser'),
       parserOptions: {
         project: ['./tsconfig.json'],
       },
-      globals: {
-        node: true,
-      },
+      globals: globals.node,
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
     },
     rules: {
-      ...tseslint.rules,
-      // Add any specific server-side rules here if needed
-      // For example:
-      // "@typescript-eslint/no-unused-vars": "warn", // Example rule
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
-    ignores: ['node_modules', 'dist', 'build'],
   },
 ];

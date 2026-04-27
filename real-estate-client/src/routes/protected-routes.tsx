@@ -3,6 +3,7 @@ import Layout from "@/modules/broker-dashboard-modules/component/layout";
 import BuyerDashboard from "@/modules/broker-dashboard-modules/page/buyer";
 import Favorite from "@/modules/broker-dashboard-modules/page/favorite";
 import ProfilePage from "@/modules/profile-modules/page";
+import { PropertyDetailsPage } from "@/modules/property-details-modules";
 
 export const protectedRoutes = [
   {
@@ -21,6 +22,10 @@ export const protectedRoutes = [
       {
         path: "profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "properties/:id",
+        element: <PropertyDetailsPage />,
       },
     ],
   },

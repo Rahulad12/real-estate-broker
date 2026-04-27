@@ -8,12 +8,12 @@
 - [x] MongoDB schema definitions.
 
 ## Milestone 2: Property Management
-**Status**: In Progress
+**Status**: Completed
 - [x] Property listing API.
 - [x] Property creation API.
 - [x] Dashboard view for browsing properties.
-- [ ] Image upload for property listings.
-- [ ] Detailed property view page.
+- [x] Image upload for property listings.
+- [x] Detailed property view page.
 
 ## Milestone 3: Favorites & User Interaction
 **Status**: In Progress

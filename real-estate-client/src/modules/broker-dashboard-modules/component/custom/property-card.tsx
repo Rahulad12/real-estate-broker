@@ -5,6 +5,7 @@ import { Bath, BedDouble, Building2, Heart, Home, MapPin, Maximize2, Warehouse }
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { Property } from "../../types/property.types";
+import { useNavigate } from "react-router-dom";
 
 
 const propertyTypeIcon = (type: string) => {
@@ -22,8 +23,22 @@ const PropertyCard =({
   isSaved: boolean;
   onToggleSave: (id: string) => void;
 }) =>{
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/dashboard/properties/${property._id}`);
+  };
+
+  const handleSaveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleSave(property._id);
+  };
+
   return (
-    <Card className="group overflow-hidden border border-border/60 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex flex-col">
+    <Card
+      onClick={handleCardClick}
+      className="group overflow-hidden border border-border/60 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex flex-col cursor-pointer"
+    >
       {/* Image */}
       <div className="relative overflow-hidden aspect-4/3">
         <img
@@ -47,7 +62,7 @@ const PropertyCard =({
 
         {/* Save button */}
         <button
-          onClick={() => onToggleSave(property._id)}
+          onClick={handleSaveClick}
           className={cn(
             "absolute top-3 right-3 h-8 w-8 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm border",
             isSaved

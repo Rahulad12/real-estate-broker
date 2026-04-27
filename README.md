@@ -59,7 +59,7 @@ The client will start at `http://localhost:5173`
 
 ## Available Scripts
 
-### Backend (`/server`)
+### Backend (`/real-estate-server`)
 
 | Command | Description |
 |---------|-------------|

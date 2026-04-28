@@ -86,7 +86,9 @@ export const authUser = async (authData: AuthUserPayload) => {
     return {
       accessToken,
       refreshToken,
-      user: role,
+      user: {
+        role,
+      },
     };
   } catch (error) {
     const err = error as Error;

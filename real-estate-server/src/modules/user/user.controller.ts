@@ -27,10 +27,11 @@ export const registerUserController = async (
       success: true,
       message: 'User created successfully',
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -54,7 +55,7 @@ export const getUserDetailsController = async (
   req: AuthRequest,
   res: Response,
 ) => {
-  const userId = req.user?.id as mongoose.Types.ObjectId;
+  const userId = new mongoose.Types.ObjectId(req.user!.id);
   try {
     const user = await getUserDetailsById(userId);
     return res.status(200).json({
@@ -73,7 +74,7 @@ export const updateEmailController = async (
   req: AuthRequest,
   res: Response,
 ) => {
-  const userId = req.user?.id as mongoose.Types.ObjectId;
+  const userId = new mongoose.Types.ObjectId(req.user!.id);
   const payload: UpdateEmailPayload = req.body;
   try {
     const user = await updateEmail(userId, payload);
@@ -93,7 +94,7 @@ export const updatePasswordController = async (
   req: AuthRequest,
   res: Response,
 ) => {
-  const userId = req.user?.id as mongoose.Types.ObjectId;
+  const userId = new mongoose.Types.ObjectId(req.user!.id);
   const payload: UpdatePasswordPayload = req.body;
   try {
     await updatePassword(userId, payload);
@@ -101,10 +102,11 @@ export const updatePasswordController = async (
       success: true,
       message: 'Password updated successfully',
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 

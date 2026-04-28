@@ -39,10 +39,11 @@ export const createRealEstateController = async (
       message: 'Real estate created successfully',
       data: realEstate,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -61,22 +62,23 @@ export const getRealEstatesController = async (req: Request, res: Response) => {
   try {
     const { page, limit, search, propertyType, minPrice, maxPrice } = req.query;
     const result = await getRealEstates(
-      page ? Number(page) : 1,
-      limit ? Number(limit) : 10,
+      page ? Number(page as string) : 1,
+      limit ? Number(limit as string) : 10,
       search as string | undefined,
       propertyType as string | undefined,
-      minPrice ? Number(minPrice) : undefined,
-      maxPrice ? Number(maxPrice) : undefined,
+      minPrice ? Number(minPrice as string) : undefined,
+      maxPrice ? Number(maxPrice as string) : undefined,
     );
     return res.status(200).json({
       success: true,
       message: 'Real estates fetched successfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -103,10 +105,11 @@ export const getPropertyByIdController = async (
       message: 'Property fetched successfully',
       data: property,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -146,10 +149,11 @@ export const uploadPropertyImagesController = async (
       message: 'Images uploaded successfully',
       data: updatedProperty,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -176,10 +180,11 @@ export const incrementPropertyViewsController = async (
       message: 'Property views incremented',
       data: property,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 

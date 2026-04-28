@@ -21,11 +21,13 @@
 ## Low Priority
 - [ ] **Docs**: Add Swagger/OpenAPI documentation for the backend. (#11)
 - [ ] **Chore**: Update dependencies to latest stable versions. (#10)
-- [ ] **Feature**: Contact/Inquiry system for properties. (#6)
+- [x] **Feature**: Contact/Inquiry system for properties (Implemented as Viewing/Scheduling). (#6)
 
-## Admin Panel
+## Admin Panel Overhaul
 - [x] **Feature**: Create admin panel with separate login page. (#22)
-- [x] **Feature**: Admin can manage all properties (CRUD).
-- [x] **Feature**: Admin can manage users (view, disable, delete).
-- [x] **Feature**: Admin dashboard with statistics and analytics.
-- [x] **Feature**: Admin navigation from main dashboard for admin users.
+- [x] **Backend**: Implement Scheduling module for viewing requests. (#23)
+- [x] **Backend**: Expand Admin service with full User/Property CRUD and enhanced analytics. (#24)
+- [x] **Frontend**: Implement modular Admin Layout with multi-level Sidebar navigation. (#25)
+- [x] **Frontend**: Create Main Dashboard with Recharts for system-wide insights. (#26)
+- [x] **Frontend**: Create module-specific dashboards (Users, Properties, Scheduling) with specialized charts. (#27)
+- [x] **Frontend**: Implement Scheduling management UI (View, Confirm, Cancel). (#28)

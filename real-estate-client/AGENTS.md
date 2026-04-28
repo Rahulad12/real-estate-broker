@@ -4,6 +4,33 @@ This document defines strict styling rules that all agents MUST follow when buil
 
 ---
 
+## 0. UI Component Rules (CRITICAL)
+
+1. **Shadcn Priority**: ALWAYS check Shadcn UI first. Use Shadcn components when available (Button, Card, Input, Table, Dialog, DropdownMenu, etc.).
+2. **components/ui/ Directory**: 
+   - This directory is RESERVED for Shadcn initialized components only
+   - NEVER create custom UI components in `src/components/ui/`
+   - Shadcn components are added via `npx shadcn@latest add <component>` command
+3. **Custom Components**: Only create custom components if Shadcn doesn't provide the required UI element.
+4. **Component Hierarchy**:
+   - `src/components/ui/` ← Shadcn components only (initialized via shadcn CLI)
+   - `src/components/shared/` ← Custom reusable components used across multiple modules
+   - `src/modules/<feature>/components/` ← Module-specific components
+
+---
+
+## 0.5 API Convention Rules (CRITICAL)
+
+MUST follow `.agents/rules/api-convention.md`:
+
+1. **TanStack Query Only**: All data fetching MUST use `@tanstack/react-query` hooks.
+2. **Service Layer**: Pure API calls in `src/apis/services/` returning promises.
+3. **Hooks Layer**: TanStack Query hooks in `src/apis/hooks/` wrapping services.
+4. **No Direct Service Calls**: Components MUST use hooks, never services directly.
+5. **Query Keys**: Use array format `[entity, ...params]` for consistent caching.
+
+---
+
 ## 1. Color System (CSS Variables Only)
 
 Use Tailwind classes that map to these CSS variables. NEVER use arbitrary hex/RGB values.
@@ -161,3 +188,33 @@ Height for standard inputs: `h-11`
 - [ ] Form uses `space-y-6` for field spacing
 - [ ] Only CSS variable-based colors are used
 - [ ] No arbitrary hex values in className
+
+---
+
+## 11. Component Architecture Mandates (CRITICAL)
+
+Agents MUST follow these rules when implementing any feature:
+
+1. **Re-render Analysis**: When implementing any feature, you MUST strictly check for unnecessary re-renders. If a component causes re-renders in other components, extract it into a separate component.
+2. **Reusable Components**: Create a separate component ONLY if it will be reused. Do not over-engineer with premature abstraction.
+3. **Shared Components**: Global/reusable frontend components that are used across multiple modules MUST be placed in `src/components/shared/` folder.
+4. **Module Components**: Components specific to a feature module should stay within `src/modules/your-module/components/`.
+5. **useEffect Restrictions**: AVOID using `useEffect` unless absolutely necessary. Prefer:
+   - Direct data transformations in render
+   - Event handlers for user interactions
+   - TanStack Query for data fetching
+   - `useMemo`/`useCallback` for expensive computations
+   - Only use `useEffect` for side effects that cannot be handled by the above (e.g., subscriptions, timers, manual DOM manipulation).
+
+---
+
+## 12. Performance Checklist (MANDATORY for all implementations)
+
+Agents MUST complete this checklist before finishing any implementation:
+
+- [ ] Checked for unnecessary re-renders using React DevTools or similar
+- [ ] Extracted components causing re-renders in parent/sibling components
+- [ ] Placed reusable global components in `src/components/shared/`
+- [ ] Avoided `useEffect` unless necessary (document reason in comments)
+- [ ] Used `useMemo`/`useCallback` for expensive operations
+- [ ] Verified component renders only when its own state/props change

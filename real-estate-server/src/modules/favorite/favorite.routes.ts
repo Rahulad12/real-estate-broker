@@ -4,7 +4,7 @@ import {
   toggleFavoriteController,
 } from './favorite.controller';
 import { authorize } from '@/middleware/role.middleware';
-import { authMiddleware } from '@/middleware/auth.middleware';
+import { authenticate } from '@/middleware/auth.middleware';
 import { validateRequest } from '@/middleware/validation.middleware';
 import { createFavoriteSchema } from './favorite.validation';
 import { Router } from 'express';
@@ -13,7 +13,7 @@ const favoriteRouter = Router();
 
 favoriteRouter.post(
   '/',
-  authMiddleware,
+  authenticate,
   authorize(['user']),
   validateRequest(createFavoriteSchema, 'query'),
   toggleFavoriteController,
@@ -21,14 +21,14 @@ favoriteRouter.post(
 
 favoriteRouter.get(
   '/by-user',
-  authMiddleware,
+  authenticate,
   authorize(['user']),
   getFavoritesController,
 );
 
 favoriteRouter.get(
   '/count',
-  authMiddleware,
+  authenticate,
   authorize(['user']),
   getFavoritesCountController,
 );

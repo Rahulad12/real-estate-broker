@@ -14,7 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { CreateUserValidation } from "../validation-schema/user.validation";
-import Label from "@/components/ui/custom/reuseable-lable";
+import Label from "@/components/shared/reuseable-lable";
 import inputCls from "@/lib/input-class-builder";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field, FieldGroup } from "@/components/shared/field";
 
 // Error message
 const ErrorMsg = ({ msg }: { msg?: string }) =>

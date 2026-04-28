@@ -2,7 +2,7 @@ import { useGetPropertyById } from '@/apis/hooks/property.hooks';
 import { useParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { PropertyMap } from '@/components/ui/map/property-map';
+import { PropertyMap } from '@/components/shared/map/property-map';
 import { useToggleSaveAsFavorite } from '@/apis/hooks/favorite.hooks';
 import { Heart, MapPin, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';

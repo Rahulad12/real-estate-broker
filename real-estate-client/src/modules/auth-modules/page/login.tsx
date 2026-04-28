@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Field, FieldGroup, FieldLegend } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLegend } from "@/components/shared/field";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginValidation } from "../validation-schema/user.validation";
@@ -8,7 +8,7 @@ import { EyeIcon, EyeOffIcon, Loader2, Lock, Mail } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import inputCls from "@/lib/input-class-builder";
-import Label from "@/components/ui/custom/reuseable-lable";
+import Label from "@/components/shared/reuseable-lable";
 import { useLogin } from "@/apis/hooks/auth.hooks";
 import type { LoginPayload } from "../types";
 import {
@@ -37,7 +37,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<LoginPayload> = async (data: LoginPayload) => {
     try {
       const response = await Login(data);
-      const userRole = (response as any)?.data?.user?.role;
+      const userRole = response?.data?.user?.role as string;
       
       if (userRole === "admin") {
         navigate("/admin/dashboard");

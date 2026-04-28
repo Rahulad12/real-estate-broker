@@ -2,9 +2,90 @@ import {
   getAdminStats,
   getAllUsers,
   deleteUser,
+  createUser,
+  updateUser,
   adminDeleteProperty,
+  adminCreateProperty,
+  adminUpdateProperty,
 } from './admin.service';
+import { AuthRequest } from '@/middleware/auth.middleware';
 import { Response } from 'express';
+
+/**
+ * Create user as admin
+ */
+export const createUserController = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await createUser(req.body);
+    return res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      data: user,
+    });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    return res
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Update user as admin
+ */
+export const updateUserController = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await updateUser(req.params.id as string, req.body);
+    return res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: user,
+    });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    return res
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Create property as admin
+ */
+export const adminCreatePropertyController = async (req: AuthRequest, res: Response) => {
+  try {
+    const property = await adminCreateProperty(req.body);
+    return res.status(201).json({
+      success: true,
+      message: 'Property created successfully',
+      data: property,
+    });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    return res
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Update property as admin
+ */
+export const adminUpdatePropertyController = async (req: AuthRequest, res: Response) => {
+  try {
+    const property = await adminUpdateProperty(req.params.id as string, req.body);
+    return res.status(200).json({
+      success: true,
+      message: 'Property updated successfully',
+      data: property,
+    });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    return res
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
+  }
+};
 
 /**
  * @fileoverview Admin Controller
@@ -23,7 +104,7 @@ import { Response } from 'express';
  * @status 500 - Server error
  * @example GET /api/admin/stats (requires admin role)
  */
-export const getAdminStatsController = async (_req: any, res: Response) => {
+export const getAdminStatsController = async (_req: AuthRequest, res: Response) => {
   try {
     const stats = await getAdminStats();
     return res.status(200).json({
@@ -31,10 +112,11 @@ export const getAdminStatsController = async (_req: any, res: Response) => {
       message: 'Admin statistics fetched successfully',
       data: stats,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -49,10 +131,10 @@ export const getAdminStatsController = async (_req: any, res: Response) => {
  * @status 500 - Server error
  * @example GET /api/admin/users?page=1&limit=10
  */
-export const getAllUsersController = async (req: any, res: Response) => {
+export const getAllUsersController = async (req: AuthRequest, res: Response) => {
   try {
-    const page = req.query.page ? Number(req.query.page) : 1;
-    const limit = req.query.limit ? Number(req.query.limit) : 10;
+    const page = req.query.page ? Number(req.query.page as string) : 1;
+    const limit = req.query.limit ? Number(req.query.limit as string) : 10;
 
     const result = await getAllUsers(page, limit);
     return res.status(200).json({
@@ -60,10 +142,11 @@ export const getAllUsersController = async (req: any, res: Response) => {
       message: 'Users fetched successfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -80,20 +163,21 @@ export const getAllUsersController = async (req: any, res: Response) => {
  * @example DELETE /api/admin/users/:id
  */
 export const deleteUserController = async (
-  req: any,
+  req: AuthRequest,
   res: Response,
 ) => {
   try {
-    const user = await deleteUser(req.params.id);
+    const user = await deleteUser(req.params.id as string);
     return res.status(200).json({
       success: true,
       message: 'User deleted successfully',
       data: user,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };
 
@@ -110,19 +194,20 @@ export const deleteUserController = async (
  * @example DELETE /api/admin/properties/:id
  */
 export const adminDeletePropertyController = async (
-  req: any,
+  req: AuthRequest,
   res: Response,
 ) => {
   try {
-    const property = await adminDeleteProperty(req.params.id);
+    const property = await adminDeleteProperty(req.params.id as string);
     return res.status(200).json({
       success: true,
       message: 'Property deleted successfully',
       data: property,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
     return res
-      .status(error.statusCode || 500)
-      .json({ success: false, message: error.message });
+      .status(err.statusCode || 500)
+      .json({ success: false, message: err.message });
   }
 };

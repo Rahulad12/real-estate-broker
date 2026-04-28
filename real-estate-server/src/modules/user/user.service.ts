@@ -15,6 +15,7 @@ import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { verify } from 'jsonwebtoken';
 import { env } from '@/config/env';
+import { JwtPayload } from '@/types/express';
 
 export const registerUser = async (userDetials: CreateUserPayload) => {
   try {
@@ -51,9 +52,10 @@ export const registerUser = async (userDetials: CreateUserPayload) => {
       ...userDetials,
       password: hashedPassword,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     logger.error('Error registering user', { error });
-    throw error;
+    throw err;
   }
 };
 
@@ -80,15 +82,16 @@ export const authUser = async (authData: AuthUserPayload) => {
       id: user._id,
       role: user.role,
     });
-    const { _id } = user.toObject();
+    const { role } = user.toObject();
     return {
       accessToken,
       refreshToken,
-      user: _id,
+      user: role,
     };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     logger.error('Error authenticating user', { error });
-    throw error;
+    throw err;
   }
 };
 
@@ -103,9 +106,10 @@ export const getUserDetailsById = async (userId: mongoose.Types.ObjectId) => {
       throw AppError.notFound('User not found');
     }
     return user;
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     logger.error('Error getting user details', { error });
-    throw error;
+    throw err;
   }
 };
 
@@ -140,9 +144,10 @@ export const updateEmail = async (
     logger.info('User email updated successfully', { userId });
     const { _id, email, role, userName, firstName, lastName } = user.toObject();
     return { _id, email, role, userName, firstName, lastName };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     logger.error('Error updating user email', { error });
-    throw error;
+    throw err;
   }
 };
 
@@ -171,9 +176,10 @@ export const updatePassword = async (
 
     logger.info('User password updated successfully', { userId });
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     logger.error('Error updating user password', { error });
-    throw error;
+    throw err;
   }
 };
 
@@ -181,7 +187,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
   try {
     logger.info('Refreshing access token');
 
-    const decoded = verify(refreshToken, env.JWT_REFRESH_SECRET!) as any;
+    const decoded = verify(refreshToken, env.JWT_REFRESH_SECRET!) as JwtPayload;
 
     const user = await UserModel.findById(decoded.id).select(
       '-createdAt -updatedAt -password -__v',
@@ -200,7 +206,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
     return {
       accessToken: newAccessToken,
     };
-  } catch (error: any) {
+  } catch (error) {
     logger.error('Error refreshing access token', { error });
     throw AppError.unauthorized('Invalid refresh token');
   }

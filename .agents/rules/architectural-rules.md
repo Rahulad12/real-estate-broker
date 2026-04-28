@@ -37,10 +37,51 @@
     types/         ← TypeScript interfaces and types
     validation-schema/ ← Zod schemas for forms
   ```
-- **Component Placement**:
-  - Default: create components inside `component/custom/` or `component/skeleton/` of the owning module.
-  - Promote to `src/components/shared/` **only** when a component is confirmed to be used by more than one module.
-  - Never create a component in `shared/` speculatively.
-- **Logic Separation**: Keep UI components (in `component/`) separate from business logic (in `page/` or TanStack Query hooks).
-- **Data Fetching**: All API calls must go through TanStack Query hooks defined in `src/apis/hooks/`.
-- **State Management**: Prefer local state or TanStack Query cache. Avoid global state providers unless absolutely necessary.
+
+### UI Component Rules (CRITICAL)
+1. **Shadcn Priority**: ALWAYS check Shadcn UI first. Use Shadcn components when available (Button, Card, Input, Table, Dialog, DropdownMenu, etc.).
+2. **components/ui/ Directory**: 
+   - This directory is RESERVED for Shadcn initialized components only
+   - NEVER create custom UI components in `src/components/ui/`
+   - Shadcn components are added via `npx shadcn@latest add <component>` command
+3. **Custom Components**: Only create custom components if Shadcn doesn't provide the required UI element.
+4. **Component Hierarchy**:
+   - `src/components/ui/` ← Shadcn components only (initialized via shadcn CLI)
+   - `src/components/shared/` ← Custom reusable components used across multiple modules
+   - `src/modules/<feature>/components/` ← Module-specific components
+
+### Component Architecture Mandates (CRITICAL)
+1. **Re-render Analysis**: When implementing any feature, you MUST strictly check for unnecessary re-renders. If a component causes re-renders in other components, extract it into a separate component.
+2. **Reusable Components**: Create a separate component ONLY if it will be reused. Do not over-engineer with premature abstraction.
+3. **Shared Components**: Global/reusable frontend components that are used across multiple modules MUST be placed in `src/components/shared/` folder.
+4. **Module Components**: Components specific to a feature module should stay within `src/modules/<feature-name>/components/`.
+5. **useEffect Restrictions**: AVOID using `useEffect` unless absolutely necessary. Prefer:
+   - Direct data transformations in render
+   - Event handlers for user interactions
+   - TanStack Query for data fetching
+   - `useMemo`/`useCallback` for expensive computations
+   - Only use `useEffect` for side effects that cannot be handled by the above (e.g., subscriptions, timers, manual DOM manipulation).
+
+### Component Placement Rules
+- Default: create components inside `component/custom/` or `component/skeleton/` of the owning module.
+- Promote to `src/components/shared/` **only** when a component is confirmed to be used by more than one module.
+- Never create a component in `shared/` speculatively.
+- NEVER create custom components in `src/components/ui/` - use Shadcn CLI to add components there.
+
+### Logic Separation
+- Keep UI components (in `component/`) separate from business logic (in `page/` or TanStack Query hooks).
+
+### Data Fetching
+- All API calls must go through TanStack Query hooks defined in `src/apis/hooks/`.
+
+### State Management
+- Prefer local state or TanStack Query cache. Avoid global state providers unless absolutely necessary.
+
+### Performance Checklist (MANDATORY for all implementations)
+Before marking any implementation as complete, verify:
+- [ ] Checked for unnecessary re-renders using React DevTools or similar
+- [ ] Extracted components causing re-renders in parent/sibling components
+- [ ] Placed reusable global components in `src/components/shared/`
+- [ ] Avoided `useEffect` unless necessary (document reason in comments)
+- [ ] Used `useMemo`/`useCallback` for expensive operations
+- [ ] Verified component renders only when its own state/props change

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { CreateRealEstatePayload } from '../real-estate/real-estate.types';
 
 /**
  * Interface for Admin statistics
@@ -23,11 +24,15 @@ export const getAdminStats = async () => {
   try {
     const UserModel = (await import('../user/user.schema')).default;
     const RealEstateModel = (await import('../real-estate/real-estate.schema')).default;
+    const SchedulingModel = (await import('../scheduling/scheduling.schema')).default;
 
-    const [totalUsers, totalProperties, properties] = await Promise.all([
+    const [totalUsers, totalProperties, properties, userStats, propertyStats, schedulingStats] = await Promise.all([
       UserModel.countDocuments({}),
       RealEstateModel.countDocuments({}),
       RealEstateModel.find({}, 'views likes'),
+      UserModel.aggregate([{ $group: { _id: '$role', count: { $sum: 1 } } }]),
+      RealEstateModel.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+      SchedulingModel.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
     ]);
 
     const totalViews = properties.reduce((sum, p) => sum + (p.views || 0), 0);
@@ -45,7 +50,68 @@ export const getAdminStats = async () => {
       totalViews,
       totalLikes,
       trendingProperties,
+      userStats,
+      propertyStats,
+      schedulingStats,
     };
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Create a new user (admin only)
+ */
+export const createUser = async (userData: Record<string, unknown>) => {
+  try {
+    const UserModel = (await import('../user/user.schema')).default;
+    const bcrypt = (await import('bcryptjs')).default;
+    
+    const existingUser = await UserModel.findOne({ email: userData.email as string });
+     if (existingUser) {
+        const error = new Error('Email already exists');
+        (error as Error & { statusCode?: number }).statusCode = 400;
+        throw error;
+      }
+ 
+      const hashedPassword = await bcrypt.hash(userData.password as string, 10);
+      const user = await UserModel.create({
+        ...userData,
+        password: hashedPassword,
+      });
+      
+      const userObj = user.toObject() as unknown as Record<string, unknown>;
+      delete userObj.password;
+      return userObj;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Update a user (admin only)
+ */
+export const updateUser = async (userId: string, updateData: Record<string, unknown>) => {
+  try {
+    const UserModel = (await import('../user/user.schema')).default;
+    const bcrypt = (await import('bcryptjs')).default;
+
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password as string, 10);
+    }
+
+    const user = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    }).select('-password');
+
+    if (!user) {
+      const error = new Error('User not found');
+      (error as Error & { statusCode?: number }).statusCode = 404;
+      throw error;
+    }
+
+    return user;
   } catch (error) {
     throw error;
   }
@@ -128,7 +194,7 @@ export const adminDeleteProperty = async (propertyId: string) => {
 
     if (!property) {
       const error = new Error('Property not found');
-      (error as any).statusCode = 404;
+      (error as Error & { statusCode?: number }).statusCode = 404;
       throw error;
     }
 
@@ -136,4 +202,20 @@ export const adminDeleteProperty = async (propertyId: string) => {
   } catch (error) {
     throw error;
   }
+};
+
+/**
+ * Create property as admin
+ */
+export const adminCreateProperty = async (data: Record<string, unknown>) => {
+  const { createRealEstate } = await import('../real-estate/real-estate.service');
+  return await createRealEstate(data as unknown as CreateRealEstatePayload);
+};
+
+/**
+ * Update property as admin
+ */
+export const adminUpdateProperty = async (id: string, data: Record<string, unknown>) => {
+  const { updateRealEstate } = await import('../real-estate/real-estate.service');
+  return await updateRealEstate(id, data);
 };

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/shared/field";
 import { useGetUserDetailsById, useUpdateEmail, useUpdatePassword } from "@/apis/hooks/user.hooks";
 import { UpdateEmailSchema, UpdatePasswordSchema } from "../validation/profile.schema";
 import { Separator } from "@/components/ui/separator";

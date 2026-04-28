@@ -26,73 +26,25 @@ export const createRealEstate = async (data: CreateRealEstatePayload) => {
 };
 
 /**
- * Get all real estate properties with filtering, pagination, and search
+ * Update an existing real estate property
  * @async
- * @function getRealEstates
- * @param {number} page - Page number (default: 1)
- * @param {number} limit - Number of items per page (default: 10)
- * @param {string} [search] - Search term for title or address (case-insensitive)
- * @param {string} [propertyType] - Filter by property type (apartment, house, villa, commercial)
- * @param {number} [minPrice] - Minimum price filter
- * @param {number} [maxPrice] - Maximum price filter
- * @returns {Promise<{realEstates: Document[], pagination: Object}>} Properties with pagination metadata
- * @returns {number} pagination.total - Total number of matching properties
- * @returns {number} pagination.page - Current page number
- * @returns {number} pagination.limit - Items per page
- * @returns {number} pagination.totalPages - Total number of pages
- * @returns {boolean} pagination.hasNextPage - Whether there's a next page
- * @returns {boolean} pagination.hasPrevPage - Whether there's a previous page
- * @throws {Error} If database query fails
- * @example
- * const result = await getRealEstates(1, 10, "villa", "villa", 100000, 500000);
- * // Returns { realEstates: [...], pagination: { total: 25, page: 1, limit: 10, ... } }
+ * @function updateRealEstate
+ * @param {string} id - Property ID
+ * @param {Partial<CreateRealEstatePayload>} data - Property data to update
+ * @returns {Promise<Document>} Updated property document
  */
-export const getRealEstates = async (
-  page: number = 1,
-  limit: number = 10,
-  search?: string,
-  propertyType?: string,
-  minPrice?: number,
-  maxPrice?: number,
-) => {
+export const updateRealEstate = async (id: string, data: Partial<CreateRealEstatePayload>) => {
   try {
-    const skip = (page - 1) * limit;
-
-    const query: any = {};
-
-    if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { 'location.address': { $regex: search, $options: 'i' } },
-      ];
+    const property = await RealEstateModel.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+    if (!property) {
+      const error = new Error('Property not found');
+      (error as Error & { statusCode?: number }).statusCode = 404;
+      throw error;
     }
-
-    if (propertyType) {
-      query.propertyType = propertyType;
-    }
-
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      query.price = {};
-      if (minPrice !== undefined) query.price.$gte = minPrice;
-      if (maxPrice !== undefined) query.price.$lte = maxPrice;
-    }
-
-    const [realEstates, total] = await Promise.all([
-      RealEstateModel.find(query).skip(skip).limit(limit),
-      RealEstateModel.countDocuments(query),
-    ]);
-
-    return {
-      realEstates,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-        hasNextPage: page < Math.ceil(total / limit),
-        hasPrevPage: page > 1,
-      },
-    };
+    return property;
   } catch (error) {
     throw error;
   }
@@ -114,10 +66,72 @@ export const getPropertyById = async (id: string) => {
     const property = await RealEstateModel.findById(id);
     if (!property) {
       const error = new Error('Property not found');
-      (error as any).statusCode = 404;
+      (error as Error & { statusCode?: number }).statusCode = 404;
       throw error;
     }
     return property;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Get all real estate properties with filtering and pagination
+ * @async
+ * @function getRealEstates
+ * @param {number} [page=1] - Page number
+ * @param {number} [limit=10] - Items per page
+ * @param {string} [search] - Search term
+ * @param {string} [propertyType] - Filter by property type
+ * @param {number} [minPrice] - Minimum price
+ * @param {number} [maxPrice] - Maximum price
+ * @returns {Promise<{realEstates: Document[], pagination: Object}>} Properties with pagination
+ */
+export const getRealEstates = async (
+  page: number = 1,
+  limit: number = 10,
+  search?: string,
+  propertyType?: string,
+  minPrice?: number,
+  maxPrice?: number,
+) => {
+  try {
+    const skip = (page - 1) * limit;
+    const query: Record<string, unknown> = {};
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { 'location.address': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (propertyType) {
+      query.propertyType = propertyType;
+    }
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      query.price = {};
+      if (minPrice !== undefined) (query.price as Record<string, unknown>).$gte = minPrice;
+      if (maxPrice !== undefined) (query.price as Record<string, unknown>).$lte = maxPrice;
+    }
+
+    const [realEstates, total] = await Promise.all([
+      RealEstateModel.find(query).skip(skip).limit(limit),
+      RealEstateModel.countDocuments(query),
+    ]);
+
+    return {
+      realEstates,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    };
   } catch (error) {
     throw error;
   }
@@ -151,7 +165,7 @@ export const uploadPropertyImages = async (
 
     if (!property) {
       const error = new Error('Property not found');
-      (error as any).statusCode = 404;
+      (error as Error & { statusCode?: number }).statusCode = 404;
       throw error;
     }
 
@@ -183,7 +197,7 @@ export const incrementPropertyViews = async (id: string) => {
 
     if (!property) {
       const error = new Error('Property not found');
-      (error as any).statusCode = 404;
+      (error as Error & { statusCode?: number }).statusCode = 404;
       throw error;
     }
 

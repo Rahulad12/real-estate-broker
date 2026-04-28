@@ -12,7 +12,7 @@ export interface ApiResponse {
   message: string;
 }
 
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'user' | 'broker';
 
 export interface User {
   email: string;

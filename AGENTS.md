@@ -1,5 +1,5 @@
-# Gemini CLI Project Documentation - Real Estate
-This document provides foundational mandates and architectural guidance for Gemini CLI agents working on the Real Estate project.
+# Project Documentation - Real Estate
+This document provides foundational mandates and architectural guidance for agents working on the Real Estate project.
 
 ## Project Overview
 A full-stack real estate listing platform.
@@ -41,11 +41,40 @@ We strictly follow a "Plan Before Action" workflow. No implementation should beg
 
 ### Frontend (`real-estate-client/`)
 - **Architecture**: Feature-based modules in `src/modules/`.
-- **UI Components**: Use Radix UI / Shadcn primitives in `src/components/ui/`.
+- **UI Components**: 
+  - Use Shadcn components from `src/components/ui/` (initialized via `npx shadcn@latest add <component>`)
+  - ALWAYS check Shadcn UI first before creating custom components
+  - `src/components/ui/` is RESERVED for Shadcn components only - NEVER create custom components there
+  - Custom reusable components go in `src/components/shared/`
+  - Module-specific components go in `src/modules/<feature>/components/`
 - **Styling**: Tailwind CSS 4. Use `cn` utility for class merging.
-- **Data Fetching**: Use TanStack Query hooks in `src/apis/hooks/`. Services in `src/apis/services/`.
+- **Data Fetching (CRITICAL)**: 
+  - MUST follow API convention rules in `.agents/rules/api-convention.md`
+  - Use TanStack Query hooks in `src/apis/hooks/` for all data fetching
+  - Services in `src/apis/services/` for pure API calls only
+  - NEVER call services directly from components
 - **Routing**: React Router 7 in `src/routes/`.
 - **Forms**: React Hook Form with Zod resolvers.
+
+### Component Architecture Mandates (CRITICAL)
+1. **Re-render Analysis**: When implementing any feature, you MUST strictly check for unnecessary re-renders. If a component causes re-renders in other components, extract it into a separate component.
+2. **Reusable Components**: Create a separate component ONLY if it will be reused. Do not over-engineer with premature abstraction.
+3. **Shared Components**: Global/ reusable frontend components that are used across multiple modules MUST be placed in `src/components/shared/` folder.
+4. **Module Components**: Components specific to a feature module should stay within `src/modules/your-module/components/`.
+5. **useEffect Restrictions**: AVOID using `useEffect` unless absolutely necessary. Prefer:
+   - Direct data transformations in render
+   - Event handlers for user interactions
+   - TanStack Query for data fetching
+   - `useMemo`/`useCallback` for expensive computations
+   - Only use `useEffect` for side effects that cannot be handled by the above (e.g., subscriptions, timers, manual DOM manipulation).
+
+### Performance Checklist (MANDATORY for all implementations)
+- [ ] Checked for unnecessary re-renders using React DevTools or similar
+- [ ] Extracted components causing re-renders in parent/sibling components
+- [ ] Placed reusable global components in `src/components/shared/`
+- [ ] Avoided `useEffect` unless necessary (document reason in comments)
+- [ ] Used `useMemo`/`useCallback` for expensive operations
+- [ ] Verified component renders only when its own state/props change
 
 ## Common Workflows
 

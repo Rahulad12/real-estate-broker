@@ -41,3 +41,21 @@
 - [ ] Production build optimization.
 - [ ] Vercel/Render deployment configuration.
 - [x] Create admin panel with separate login and management.
+
+## Milestone 5: Admin Panel Overhaul
+**Status**: Completed
+**Objective**: Transform the admin panel into a modular, data-driven management suite with per-module analytics and scheduling capabilities.
+
+### Tasks
+- [x] **Backend**: Implement Scheduling module for viewing requests.
+- [x] **Backend**: Expand Admin service with full User/Property CRUD and enhanced analytics.
+- [x] **Frontend**: Implement modular Admin Layout with multi-level Sidebar navigation.
+- [x] **Frontend**: Create Main Dashboard with Recharts for system-wide insights.
+- [x] **Frontend**: Create module-specific dashboards (Users, Properties, Scheduling) with specialized charts.
+- [x] **Frontend**: Implement Scheduling management UI (View, Confirm, Cancel).
+
+### Success Criteria
+- [x] Admin can manage users and properties via dedicated sub-menus.
+- [x] Admin can view and process all scheduled viewing requests.
+- [x] Each parent menu features a visual dashboard using Recharts.
+- [x] System flow is visible through data visualizations.

@@ -1,3 +1,7 @@
+---
+name: server-doc-generator
+description: Expertise in generating comprehensive JSDoc documentation for backend server code.
+---
 # Server Documentation Generator Skill
 
 ## Description

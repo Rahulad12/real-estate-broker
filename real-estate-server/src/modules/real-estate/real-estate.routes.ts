@@ -6,7 +6,7 @@ import {
   incrementPropertyViewsController,
   getTrendingPropertiesController,
 } from './real-estate.controller';
-import { authMiddleware } from '@/middleware/auth.middleware';
+import { authenticate } from '@/middleware/auth.middleware';
 import { authorize } from '@/middleware/role.middleware';
 import { validateRequest } from '@/middleware/validation.middleware';
 import { uploadImages } from '@/middleware/upload.middleware';
@@ -36,7 +36,7 @@ const realEstateRouter = Router();
  */
 realEstateRouter.post(
   '/',
-  authMiddleware,
+  authenticate,
   authorize(['admin']),
   validateRequest(createRealEstateSchema),
   createRealEstateController,
@@ -59,7 +59,7 @@ realEstateRouter.get(
  */
 realEstateRouter.get(
   '/:id',
-  authMiddleware,
+  authenticate,
   authorize(['user', 'admin']),
   getPropertyByIdController,
 );
@@ -71,7 +71,7 @@ realEstateRouter.get(
  */
 realEstateRouter.post(
   '/:id/images',
-  authMiddleware,
+  authenticate,
   authorize(['admin']),
   uploadImages.array('images', 10),
   uploadPropertyImagesController,

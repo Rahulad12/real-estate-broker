@@ -1,4 +1,5 @@
 import axiosInstance from "../axiosInstance";
+import type { User } from "@/modules/admin-modules/types/admin.types";
 
 /**
  * Get admin dashboard statistics
@@ -9,29 +10,50 @@ export const getAdminStatsService = () => {
 };
 
 /**
- * Get all users (admin only)
- * @param {number} page - Page number
- * @param {number} limit - Items per page
- * @returns {Promise<AxiosResponse>} Response with users and pagination
+ * User management
  */
 export const getAllUsersService = (page: number = 1, limit: number = 10) => {
   return axiosInstance.get("/admin/users", { params: { page, limit } });
 };
 
-/**
- * Delete a user (admin only)
- * @param {string} userId - User ID to delete
- * @returns {Promise<AxiosResponse>} Response with deleted user
- */
+export const createUserService = (data: Partial<User>) => {
+  return axiosInstance.post("/admin/users", data);
+};
+
+export const updateUserService = (id: string, data: Partial<User>) => {
+  return axiosInstance.patch(`/admin/users/${id}`, data);
+};
+
 export const deleteUserService = (userId: string) => {
   return axiosInstance.delete(`/admin/users/${userId}`);
 };
 
 /**
- * Delete any property (admin only)
- * @param {string} propertyId - Property ID to delete
- * @returns {Promise<AxiosResponse>} Response with deleted property
+ * Property management
  */
+export const adminCreatePropertyService = (data: Record<string, unknown>) => {
+  return axiosInstance.post("/admin/properties", data);
+};
+
+export const adminUpdatePropertyService = (id: string, data: Record<string, unknown>) => {
+  return axiosInstance.patch(`/admin/properties/${id}`, data);
+};
+
 export const adminDeletePropertyService = (propertyId: string) => {
   return axiosInstance.delete(`/admin/properties/${propertyId}`);
+};
+
+/**
+ * Scheduling management
+ */
+export const getAllSchedulingsService = (page: number = 1, limit: number = 10) => {
+  return axiosInstance.get("/scheduling", { params: { page, limit } });
+};
+
+export const updateSchedulingStatusService = (id: string, data: any) => {
+  return axiosInstance.patch(`/scheduling/${id}`, data);
+};
+
+export const getSchedulingStatsService = () => {
+  return axiosInstance.get("/scheduling/stats");
 };

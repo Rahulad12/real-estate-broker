@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Field, FieldGroup, FieldLegend } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLegend } from "@/components/shared/field";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginValidation } from "@/modules/auth-modules/validation-schema/user.validation";

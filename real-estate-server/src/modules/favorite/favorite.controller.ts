@@ -14,7 +14,7 @@ export const toggleFavoriteController = async (
     const { realEstateId, isFavorite } = req.query;
 
     const favorite = await toggleFavorite({
-      userId: req.user.id as string,
+      userId: req.user!.id,
       realEstateId: realEstateId as string,
       isFavorite: isFavorite === 'true',
     });
@@ -23,10 +23,11 @@ export const toggleFavoriteController = async (
       message: 'Favorite toggled successfully',
       data: favorite,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
@@ -36,7 +37,7 @@ export const getFavoritesController = async (
   res: Response,
 ) => {
   try {
-    const userId = req.user.id as string;
+    const userId = req.user!.id;
     const { page, limit } = req.query;
     const favorites = await getFavorites(
       userId,
@@ -48,10 +49,11 @@ export const getFavoritesController = async (
       message: 'Favorites retrieved successfully',
       data: favorites,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
@@ -61,16 +63,17 @@ export const getFavoritesCountController = async (
   res: Response,
 ) => {
   try {
-    const userId = req.user.id as string;
+    const userId = req.user!.id;
     const count = await getFavoritesCountByUserId(userId);
     return res.status(200).json({
       success: true,
       data: count,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };

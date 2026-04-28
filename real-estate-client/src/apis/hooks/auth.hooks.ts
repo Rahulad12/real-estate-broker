@@ -20,8 +20,8 @@ export const useLogin = () => {
     onSuccess(data: LoginApiResponse) {
       authService.setAccessToken(data?.data?.accessToken);
       authService.setRefreshToken(data?.data?.refreshToken);
-      // Store user role for admin guard
-      const userRole = (data as any)?.data?.user?.role;
+      // Store user email for admin guard
+      const userRole:string = data.data.user;
       if (userRole) {
         localStorage.setItem("user_role", userRole);
       }

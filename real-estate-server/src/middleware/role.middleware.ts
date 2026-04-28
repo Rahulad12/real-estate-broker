@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserRole } from '@/modules/user/user.types';
 import { AppError } from '@/utils/error.helper';
+import { JwtPayload } from '@/types/express';
 
 export const authorize = (roles: UserRole[]) => {
   return (
@@ -9,7 +10,7 @@ export const authorize = (roles: UserRole[]) => {
     next: NextFunction,
   ): Response | void => {
     try {
-      const user = (req as any).user;
+      const user = req.user as JwtPayload;
       if (!user) {
         throw AppError.unauthorized('Unauthorized');
       }

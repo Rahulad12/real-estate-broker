@@ -6,7 +6,7 @@ import {
   updateEmailController,
   updatePasswordController,
 } from './user.controller';
-import { authMiddleware } from '@/middleware/auth.middleware';
+import { authenticate } from '@/middleware/auth.middleware';
 import { validateRequest } from '@/middleware/validation.middleware';
 import {
   CreateUserValidation,
@@ -25,16 +25,16 @@ authRoutes.post(
 );
 authRoutes.post('/login', validateRequest(LoginValidation), authUserController);
 authRoutes.post('/refresh-token', refreshTokenController);
-authRoutes.get('/user/me', authMiddleware, getUserDetailsController);
+authRoutes.get('/user/me', authenticate, getUserDetailsController);
 authRoutes.patch(
   '/update-email',
-  authMiddleware,
+  authenticate,
   validateRequest(UpdateEmailValidation),
   updateEmailController,
 );
 authRoutes.patch(
   '/update-password',
-  authMiddleware,
+  authenticate,
   validateRequest(UpdatePasswordValidation),
   updatePasswordController,
 );

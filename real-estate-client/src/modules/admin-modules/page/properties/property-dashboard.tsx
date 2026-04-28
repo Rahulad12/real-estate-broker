@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetAdminStats } from "@/apis/hooks/admin.hooks";
 import { 
   Card, 
@@ -53,7 +52,7 @@ export const PropertyDashboard = () => {
               <YAxis />
               <Tooltip />
               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                {chartData.map((entry, index) => (
+                {chartData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Bar>

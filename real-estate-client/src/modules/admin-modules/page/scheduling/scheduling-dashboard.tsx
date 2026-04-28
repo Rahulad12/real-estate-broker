@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetSchedulingStats } from "@/apis/hooks/admin.hooks";
 import { 
   Card, 
@@ -66,7 +65,7 @@ export const SchedulingDashboard = () => {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {statusData.map((entry, index: number) => (
+                  {statusData.map((index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

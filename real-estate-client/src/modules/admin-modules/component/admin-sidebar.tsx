@@ -1,11 +1,9 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router';
 import { 
   LayoutDashboard, 
   Users, 
   Home, 
   Calendar, 
-  Settings, 
   LogOut,
   ChevronRight,
   BarChart3

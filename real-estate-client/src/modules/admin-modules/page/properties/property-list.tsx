@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetAllListedProperty } from "@/apis/hooks/property.hooks";
 import { useAdminDeleteProperty } from "@/apis/hooks/admin.hooks";
 import {

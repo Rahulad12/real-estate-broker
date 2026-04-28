@@ -7,7 +7,9 @@ export interface LoginApiResponse {
   data: {
     accessToken: string;
     refreshToken: string;
-    user: string;
+    user: {
+      role: string;
+    };
   };
   message:string;
 }

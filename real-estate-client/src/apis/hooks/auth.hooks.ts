@@ -21,7 +21,7 @@ export const useLogin = () => {
       authService.setAccessToken(data?.data?.accessToken);
       authService.setRefreshToken(data?.data?.refreshToken);
       // Store user email for admin guard
-      const userRole:string = data.data.user;
+      const userRole:string = data.data.user?.role || "";
       if (userRole) {
         localStorage.setItem("user_role", userRole);
       }

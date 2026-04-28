@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetAllSchedulings, useUpdateSchedulingStatus } from "@/apis/hooks/admin.hooks";
 import {
   Card,

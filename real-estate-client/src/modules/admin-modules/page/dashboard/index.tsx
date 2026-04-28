@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetAdminStats } from "@/apis/hooks/admin.hooks";
 import { 
   Card, 
@@ -91,7 +90,7 @@ const DashboardIndex = () => {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {userChartData.map((entry, index) => (
+                  {userChartData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

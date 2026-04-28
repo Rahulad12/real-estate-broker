@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetAdminStats } from "@/apis/hooks/admin.hooks";
 import { 
   Card, 
@@ -57,12 +56,12 @@ export const UserDashboard = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${(percent ?? 0) * 100}%`}
                   outerRadius={130}
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {chartData.map((entry, index) => (
+                  {chartData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

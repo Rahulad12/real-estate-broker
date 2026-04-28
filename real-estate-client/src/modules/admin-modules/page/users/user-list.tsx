@@ -16,7 +16,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "@/modules/admin-modules/types/admin.types";
 
 export const UserList = () => {
-  const [page, setPage] = React.useState(1);
+  const [page] = React.useState(1);
   const { data, isLoading } = useGetAllUsers(page, 10);
   const { mutateAsync: deleteUser, isPending: isDeleting } = useDeleteUser();
 

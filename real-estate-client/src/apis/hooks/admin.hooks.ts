@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
-import type { AdminStats, UserWithPagination } from "@/modules/admin-modules/types";
+import type { AdminStats, UserWithPagination } from "@/modules/admin-modules/types/admin.types";
 
 /**
  * Get admin dashboard statistics
@@ -25,23 +25,6 @@ export const useGetAdminStats = () => {
  */
 export const useGetAllUsers = (page: number = 1, limit: number = 10) => {
   return useQuery<UserWithPagination>({
-    queryKey: ["admin-users", page, limit],
-    queryFn: async () => {
-      const response: AxiosResponse<{ success: boolean; data: UserWithPagination }> =
-        await (await import("../services/admin.service")).getAllUsersService(page, limit);
-      return response.data.data;
-    },
-  });
-};
-
-/**
- * Get all users (admin)
- * @param {number} page - Page number
- * @param {number} limit - Items per page
- * @returns {UseQueryResult<UserWithPagination>}
- */
-export const useGetAllUsers = (page: number = 1, limit: number = 10) => {
-  return useQuery({
     queryKey: ["admin-users", page, limit],
     queryFn: async () => {
       const response: AxiosResponse<{ success: boolean; data: UserWithPagination }> =

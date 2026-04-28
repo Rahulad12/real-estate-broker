@@ -4,7 +4,7 @@ import {
   deleteUser,
   adminDeleteProperty,
 } from './admin.service';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 /**
  * @fileoverview Admin Controller
@@ -23,7 +23,7 @@ import { Request, Response } from 'express';
  * @status 500 - Server error
  * @example GET /api/admin/stats (requires admin role)
  */
-export const getAdminStatsController = async (req: Request, res: Response) => {
+export const getAdminStatsController = async (_req: any, res: Response) => {
   try {
     const stats = await getAdminStats();
     return res.status(200).json({
@@ -49,7 +49,7 @@ export const getAdminStatsController = async (req: Request, res: Response) => {
  * @status 500 - Server error
  * @example GET /api/admin/users?page=1&limit=10
  */
-export const getAllUsersController = async (req: Request, res: Response) => {
+export const getAllUsersController = async (req: any, res: Response) => {
   try {
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = req.query.limit ? Number(req.query.limit) : 10;
@@ -80,7 +80,7 @@ export const getAllUsersController = async (req: Request, res: Response) => {
  * @example DELETE /api/admin/users/:id
  */
 export const deleteUserController = async (
-  req: Request<{ id: string }>,
+  req: any,
   res: Response,
 ) => {
   try {
@@ -110,7 +110,7 @@ export const deleteUserController = async (
  * @example DELETE /api/admin/properties/:id
  */
 export const adminDeletePropertyController = async (
-  req: Request<{ id: string }>,
+  req: any,
   res: Response,
 ) => {
   try {

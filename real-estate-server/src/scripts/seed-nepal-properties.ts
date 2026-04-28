@@ -358,20 +358,20 @@ const seedDatabase = async () => {
   try {
     // Connect to MongoDB
     await mongoose.connect(MONGO_URI);
-    console.log('✓ Connected to MongoDB');
+    
 
     // Clean existing data
-    const deletedCount = await RealEstateModel.deleteMany({});
-    console.log(`✓ Cleared ${deletedCount.deletedCount} existing properties`);
+    await RealEstateModel.deleteMany({});
+    
 
     // Insert Nepal properties
-    const result = await RealEstateModel.insertMany(nepalProperties);
-    console.log(`✓ Seeded ${result.length} Nepal properties successfully`);
+    await RealEstateModel.insertMany(nepalProperties);
+    
 
     // Log property types for verification
-    const cities = [...new Set(result.map((p: any) => p.location.city))];
-    console.log('✓ Properties added from cities: ' + cities.join(', '));
-    console.log('✓ All properties are in: Nepal');
+    // const cities = [...new Set(result.map((p: any) => p.location.city))];
+    
+    
 
     process.exit(0);
   } catch (error) {

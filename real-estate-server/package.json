@@ -10,7 +10,8 @@
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src/**/*.ts",
-    "seed": "ts-node src/scripts/seed-nepal-properties.ts"
+    "seed": "ts-node src/scripts/seed-nepal-properties.ts",
+    "seed:admin": "ts-node scripts/seed-admin.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

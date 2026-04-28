@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Heart, User, Menu, X } from "lucide-react";
+import { Heart, User, Menu, X, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -139,6 +139,17 @@ const Navbar = () => {
                     )}
                   </Link>
                 </DropdownMenuItem>
+                {localStorage.getItem("user_role") === "admin" && (
+                  <DropdownMenuItem asChild>
+                    <Link
+                      to="/admin/dashboard"
+                      className="flex items-center gap-2 cursor-pointer text-secondary font-medium"
+                    >
+                      <LayoutDashboard className="h-4 w-4" />
+                      Admin Panel
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive cursor-pointer"

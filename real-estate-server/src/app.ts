@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import errorMiddleware from './middleware/error.middleware';
-import { authMiddleware } from './middleware/auth.middleware';
 import { DBCONN } from './config/db';
 import authRoutes from './modules/user/user.routes';
 import realEstateRouter from './modules/real-estate/real-estate.routes';
@@ -43,7 +42,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/real-estate', realEstateRouter);
 app.use('/api/favorites', favoriteRouter);
 app.use('/api/admin', adminRouter);
-app.get('/api/health', authMiddleware, (_req: Request, res: Response) => {
+app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ message: 'Server is running' });
 });
 

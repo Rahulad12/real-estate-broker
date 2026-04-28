@@ -21,8 +21,9 @@ export const useLogin = () => {
       authService.setAccessToken(data?.data?.accessToken);
       authService.setRefreshToken(data?.data?.refreshToken);
       // Store user role for admin guard
-      if (data?.data?.user?.role) {
-        localStorage.setItem("user_role", data.data.user.role);
+      const userRole = (data as any)?.data?.user?.role;
+      if (userRole) {
+        localStorage.setItem("user_role", userRole);
       }
       toast.success(data?.message);
     },

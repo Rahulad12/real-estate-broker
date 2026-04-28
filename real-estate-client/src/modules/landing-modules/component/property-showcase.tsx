@@ -108,9 +108,9 @@ export const PropertyShowcase = () => {
               <PropertyCardSkeleton key={i} />
             ))}
           </div>
-        ) : properties?.properties && properties.properties.length > 0 ? (
+        ) : properties?.realEstates && properties.realEstates.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.properties.slice(0, 6).map((property) => (
+            {properties.realEstates.slice(0, 6).map((property: any) => (
               <PropertyShowcaseCard key={property._id} property={property} />
             ))}
           </div>

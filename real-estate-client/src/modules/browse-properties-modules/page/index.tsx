@@ -24,7 +24,7 @@ const BrowseProperties = () => {
     setFilters((prev) => ({ ...prev, search: e.target.value }));
   };
 
-  const handleFilterChange = (key: keyof PropertyQueryParams, value: string | number) => {
+  const handleFilterChange = (key: keyof PropertyQueryParams, value: string | number | undefined) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -63,7 +63,7 @@ const BrowseProperties = () => {
 
           <select
             className="h-11 px-4 rounded-md border border-input bg-background text-sm"
-            value={filters.minPrice?.toString() || ""}
+            value={filters.minPrice != null ? filters.minPrice.toString() : ""}
             onChange={(e) => handleFilterChange("minPrice", e.target.value ? Number(e.target.value) : undefined)}
           >
             <option value="">Min Price</option>
@@ -72,10 +72,10 @@ const BrowseProperties = () => {
             <option value="500000">$500k+</option>
             <option value="1000000">$1M+</option>
           </select>
-
+          
           <select
             className="h-11 px-4 rounded-md border border-input bg-background text-sm"
-            value={filters.maxPrice?.toString() || ""}
+            value={filters.maxPrice != null ? filters.maxPrice.toString() : ""}
             onChange={(e) => handleFilterChange("maxPrice", e.target.value ? Number(e.target.value) : undefined)}
           >
             <option value="">Max Price</option>

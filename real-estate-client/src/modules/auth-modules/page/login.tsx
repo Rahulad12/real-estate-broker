@@ -34,11 +34,16 @@ const Login = () => {
   //mutation
   const { mutateAsync: Login, isPending: loginLoading } = useLogin();
 
-  //handlers
   const onSubmit: SubmitHandler<LoginPayload> = async (data: LoginPayload) => {
     try {
-      await Login(data);
-      navigate(redirectTo);
+      const response = await Login(data);
+      const userRole = (response as any)?.data?.user?.role;
+      
+      if (userRole === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate(redirectTo);
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }

@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router";
 import { publicRoutes } from "./public-routes";
 import { protectedRoutes } from "./protected-routes";
-import { AdminLogin, AdminDashboard } from "@/modules/admin-modules";
+import AdminLogin from "@/modules/admin-modules/page/admin-login";
+import AdminDashboard from "@/modules/admin-modules/page/admin-dashboard";
+import AdminUsers from "@/modules/admin-modules/page/admin-users";
+import AdminProperties from "@/modules/admin-modules/page/admin-properties";
 import { AdminGuard } from "@/guard/admin.guard";
 
 const appRouter = createBrowserRouter([...publicRoutes, ...protectedRoutes,{
@@ -12,6 +15,20 @@ const appRouter = createBrowserRouter([...publicRoutes, ...protectedRoutes,{
   element: (
     <AdminGuard>
       <AdminDashboard />
+    </AdminGuard>
+  ),
+}, {
+  path: "/admin/users",
+  element: (
+    <AdminGuard>
+      <AdminUsers />
+    </AdminGuard>
+  ),
+}, {
+  path: "/admin/properties",
+  element: (
+    <AdminGuard>
+      <AdminProperties />
     </AdminGuard>
   ),
 }, {

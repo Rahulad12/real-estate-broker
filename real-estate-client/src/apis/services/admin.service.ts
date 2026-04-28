@@ -1,5 +1,4 @@
 import axiosInstance from "../axiosInstance";
-import type { AdminStats, UserWithPagination } from "@/modules/admin-modules/types";
 
 /**
  * Get admin dashboard statistics

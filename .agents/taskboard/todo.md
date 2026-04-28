@@ -24,7 +24,8 @@
 - [ ] **Feature**: Contact/Inquiry system for properties. (#6)
 
 ## Admin Panel
-- [ ] **Feature**: Create admin panel with separate login page. (#22)
-- [ ] **Feature**: Admin can manage all properties (CRUD).
-- [ ] **Feature**: Admin can manage users (view, disable, delete).
-- [ ] **Feature**: Admin dashboard with statistics and analytics.
+- [x] **Feature**: Create admin panel with separate login page. (#22)
+- [x] **Feature**: Admin can manage all properties (CRUD).
+- [x] **Feature**: Admin can manage users (view, disable, delete).
+- [x] **Feature**: Admin dashboard with statistics and analytics.
+- [x] **Feature**: Admin navigation from main dashboard for admin users.

@@ -35,9 +35,9 @@
 - [ ] Contact/Inquiry system for properties.
 
 ## Milestone 4: Advanced Features & Deployment
-**Status**: Pending
+**Status**: In Progress
 - [ ] Advanced search and filtering (Map-based search).
 - [ ] Role-based access control (RBAC) frontend guards.
 - [ ] Production build optimization.
 - [ ] Vercel/Render deployment configuration.
-- [ ] Create admin panel with separate login.
+- [x] Create admin panel with separate login and management.
